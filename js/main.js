@@ -57,21 +57,21 @@ const getRandomPrice = function () {
   return Math.floor(Math.random() * 100) * 100;
 };
 
-const getFeatures = function () {
-  const randomFeaturesCount = getRandomInRange(1, FEATURES.length);
-  const allFeatures = FEATURES;
-  const selectedFeatures = [];
+const getRandomArr = function (arr) {
+  const randomElementsCount = getRandomInRange(1, arr.length);
+  const allElements = arr;
+  const selectedElements = [];
 
-  for (let i = allFeatures.length - 1; i > 0; i--) {
+  for (let i = allElements.length - 1; i > 0; i--) {
     let j = Math.floor(Math.random() * (i + 1));
-    [allFeatures[i], allFeatures[j]] = [allFeatures[j], allFeatures[i]];
+    [allElements[i], allElements[j]] = [allElements[j], allElements[i]];
   }
 
-  for (let i = 0; i < randomFeaturesCount; i++) {
-    selectedFeatures.push(allFeatures[i]);
+  for (let i = 0; i < randomElementsCount; i++) {
+    selectedElements.push(allElements[i]);
   }
 
-  return selectedFeatures;
+  return selectedElements;
 };
 
 const getSimilarPins = function (count) {
@@ -95,7 +95,7 @@ const getSimilarPins = function (count) {
         guests: getRandomInRange(MIN_GUESTS_COUNT, MAX_GUESTS_COUNT), // Temporary value
         checkin: `${time}`, // Temporary value
         checkout: `${time}`, // Temporary value
-        features: getFeatures(),
+        features: getRandomArr(FEATURES),
         description: `Здесь должно быть описание квартиры`,
         photos: PHOTOS_SRC,
         location: {
