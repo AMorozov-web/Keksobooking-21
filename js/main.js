@@ -45,16 +45,16 @@ const pinsPosLimits = {
   }
 };
 
-const getRandomInRange = function (min, max) {
-  return Math.floor(min + Math.random() * (max + 1 - min));
+const getRandomPrice = function () {
+  return Math.floor(Math.random() * 100) * 100;
 };
 
 const getRandomElement = function (arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 };
 
-const getRandomPrice = function () {
-  return Math.floor(Math.random() * 100) * 100;
+const getRandomInRange = function (min, max) {
+  return Math.floor(min + Math.random() * (max + 1 - min));
 };
 
 const getRandomArr = function (arr) {
