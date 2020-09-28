@@ -87,7 +87,7 @@ const getSimilarPins = function (count) {
         avatar: `img/avatars/user0${i + 1}.png`
       },
       offer: {
-        title: `title`,
+        title: `Здесь должен быть заголовок`,
         address: `${locationX}, ${locationY}`,
         price: getRandomPrice(), // Temporary random value
         type: `${getRandomElement(APARTMENT_TYPES)}`,
@@ -96,7 +96,7 @@ const getSimilarPins = function (count) {
         checkin: `${time}`, // Temporary value
         checkout: `${time}`, // Temporary value
         features: getFeatures(),
-        description: ``,
+        description: `Здесь должно быть описание квартиры`,
         photos: PHOTOS_SRC,
         location: {
           x: locationX,
