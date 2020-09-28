@@ -1,7 +1,7 @@
 'use strict';
 
-const SIMILAR_AD_MAX_COUNT = 8;
-const PIN_OFFSET_X = 25;
+const OFFERS_COUNT = 8;
+const PIN_OFFSET_X = 50;
 const PIN_OFFSET_Y = 70;
 // const MIN_PIN_POS_Y = 130; // temporarily not used
 // const MAX_PIN_POS_Y = 630; // temporarily not used
@@ -12,8 +12,7 @@ const MIN_ROOMS_COUNT = 1;
 const MAX_ROOMS_COUNT = 3;
 const MIN_GUESTS_COUNT = 1;
 const MAX_GUESTS_COUNT = 3;
-const CHECKIN_TIMES = [`12:00`, `13:00`, `14:00`];
-const CHECKOUT_TIMES = [`12:00`, `13:00`, `14:00`];
+const TIMES = [`12:00`, `13:00`, `14:00`];
 const FEATURES = [
   `wifi`,
   `dishwasher`,
@@ -28,15 +27,25 @@ const PHOTOS_SRC = [
   `http://o0.github.io/assets/images/tokyo/hotel3.jpg`
 ];
 
-const body = document.querySelector(`body`);
-const offset = parseInt((getComputedStyle(body, true).marginLeft), 10);
 const map = document.querySelector(`.map`);
 const mainPin = document.querySelector(`.map__pin--main`);
-const mapPinsList = document.querySelector(`.map__pins`);
+const mainPinTop = parseInt((getComputedStyle(mainPin, null).top), 10);
+const mainPinLeft = parseInt((getComputedStyle(mainPin, null).left), 10);
+const mapPinsContainer = document.querySelector(`.map__pins`);
 const mapPinTemplate = document.querySelector(`#pin`)
   .content.querySelector(`.map__pin`);
+const pinsPosLimits = {
+  x: {
+    min: mainPinLeft - PINS_POS_INTERVAL_X - PIN_OFFSET_X / 2,
+    max: mainPinLeft + PINS_POS_INTERVAL_X - PIN_OFFSET_X / 2
+  },
+  y: {
+    min: mainPinTop - PINS_POS_INTERVAL_Y - PIN_OFFSET_Y,
+    max: mainPinTop + PINS_POS_INTERVAL_Y - PIN_OFFSET_Y
+  }
+};
 
-const getRandomCount = function (min, max) {
+const getRandomInRange = function (min, max) {
   return Math.floor(min + Math.random() * (max + 1 - min));
 };
 
@@ -44,52 +53,54 @@ const getRandomElement = function (arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 };
 
-const getCoordinates = function (element) {
-  let box = element.getBoundingClientRect();
-
-  return {
-    top: box.top + pageYOffset,
-    left: box.left + pageXOffset - offset
-  };
+const getRandomPrice = function () {
+  return Math.floor(Math.random() * 100) * 100;
 };
 
-const getPinLocationX = function () {
-  let minPosX = getCoordinates(mainPin).left - PINS_POS_INTERVAL_X + PIN_OFFSET_X;
-  let maxPosX = getCoordinates(mainPin).left + PINS_POS_INTERVAL_X + PIN_OFFSET_X;
+const getFeatures = function () {
+  const randomFeaturesCount = getRandomInRange(1, FEATURES.length);
+  const allFeatures = FEATURES;
+  const selectedFeatures = [];
 
-  return getRandomCount(minPosX, maxPosX);
-};
+  for (let i = allFeatures.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    [allFeatures[i], allFeatures[j]] = [allFeatures[j], allFeatures[i]];
+  }
 
-const getPinLocationY = function () {
-  let minPosY = getCoordinates(mainPin).top - PINS_POS_INTERVAL_Y - PIN_OFFSET_Y;
-  let maxPosY = getCoordinates(mainPin).top + PINS_POS_INTERVAL_Y - PIN_OFFSET_Y;
+  for (let i = 0; i < randomFeaturesCount; i++) {
+    selectedFeatures.push(allFeatures[i]);
+  }
 
-  return getRandomCount(minPosY, maxPosY);
+  return selectedFeatures;
 };
 
 const getSimilarPins = function (count) {
   const similarPins = [];
 
   for (let i = 0; i < count; i++) {
+    const locationX = getRandomInRange(pinsPosLimits.x.min, pinsPosLimits.x.max);
+    const locationY = getRandomInRange(pinsPosLimits.y.min, pinsPosLimits.y.max);
+    const time = getRandomElement(TIMES);
+
     similarPins.push({
       author: {
         avatar: `img/avatars/user0${i + 1}.png`
       },
       offer: {
         title: `title`,
-        address: `${getPinLocationX()}, ${getPinLocationY()}`,
-        price: `{{price}}`, // Temporary value
+        address: `${locationX}, ${locationY}`,
+        price: getRandomPrice(), // Temporary random value
         type: `${getRandomElement(APARTMENT_TYPES)}`,
-        rooms: `${getRandomCount(MIN_ROOMS_COUNT, MAX_ROOMS_COUNT)}`, // Temporary value
-        guests: `${getRandomCount(MIN_GUESTS_COUNT, MAX_GUESTS_COUNT)}`, // Temporary value
-        checkin: `${getRandomElement(CHECKIN_TIMES)}`, // Temporary value
-        checkout: `${getRandomElement(CHECKOUT_TIMES)}`, // Temporary value
-        features: `${getRandomElement(FEATURES)}`, // Need a shuffle function
+        rooms: getRandomInRange(MIN_ROOMS_COUNT, MAX_ROOMS_COUNT), // Temporary value
+        guests: getRandomInRange(MIN_GUESTS_COUNT, MAX_GUESTS_COUNT), // Temporary value
+        checkin: `${time}`, // Temporary value
+        checkout: `${time}`, // Temporary value
+        features: getFeatures(),
         description: ``,
-        photos: `${PHOTOS_SRC}`,
+        photos: PHOTOS_SRC,
         location: {
-          x: `${getPinLocationX()}`,
-          y: `${getPinLocationY()}`
+          x: locationX,
+          y: locationY
         }
       }
     });
@@ -108,13 +119,13 @@ const createPins = function (pin) {
   return mapPin;
 };
 
-const pins = getSimilarPins(SIMILAR_AD_MAX_COUNT);
+const pins = getSimilarPins(OFFERS_COUNT);
 const fragment = document.createDocumentFragment();
 
 for (let i = 0; i < pins.length; i++) {
   fragment.appendChild(createPins(pins[i]));
 }
 
-mapPinsList.appendChild(fragment);
+mapPinsContainer.appendChild(fragment);
 
 map.classList.remove(`map--faded`);
