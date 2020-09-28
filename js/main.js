@@ -45,6 +45,13 @@ const pinsPosLimits = {
   }
 };
 
+const shuffleArray = function (arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+};
+
 const getRandomPrice = function () {
   return Math.floor(Math.random() * 100) * 100;
 };
@@ -59,13 +66,10 @@ const getRandomInRange = function (min, max) {
 
 const getRandomArr = function (arr) {
   const randomElementsCount = getRandomInRange(1, arr.length);
-  const allElements = arr;
+  const allElements = arr.slice();
   const selectedElements = [];
 
-  for (let i = allElements.length - 1; i > 0; i--) {
-    let j = Math.floor(Math.random() * (i + 1));
-    [allElements[i], allElements[j]] = [allElements[j], allElements[i]];
-  }
+  shuffleArray(allElements);
 
   for (let i = 0; i < randomElementsCount; i++) {
     selectedElements.push(allElements[i]);
@@ -120,12 +124,12 @@ const createPins = function (pin) {
 };
 
 const pins = getSimilarPins(OFFERS_COUNT);
-const fragment = document.createDocumentFragment();
+const pinFragment = document.createDocumentFragment();
 
 for (let i = 0; i < pins.length; i++) {
-  fragment.appendChild(createPins(pins[i]));
+  pinFragment.appendChild(createPins(pins[i]));
 }
 
-mapPinsContainer.appendChild(fragment);
+mapPinsContainer.appendChild(pinFragment);
 
 map.classList.remove(`map--faded`);
