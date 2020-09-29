@@ -28,12 +28,14 @@ const PHOTOS_SRC = [
 ];
 
 const map = document.querySelector(`.map`);
+const mapFiltersContainer = document.querySelector(`.map__filters-container`);
 const mainPin = document.querySelector(`.map__pin--main`);
 const mainPinTop = parseInt((getComputedStyle(mainPin, null).top), 10);
 const mainPinLeft = parseInt((getComputedStyle(mainPin, null).left), 10);
 const mapPinsContainer = document.querySelector(`.map__pins`);
 const mapPinTemplate = document.querySelector(`#pin`)
   .content.querySelector(`.map__pin`);
+const popupCardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
 const pinsPosLimits = {
   x: {
     min: mainPinLeft - PINS_POS_INTERVAL_X - PIN_OFFSET_X / 2,
@@ -78,6 +80,19 @@ const getRandomArr = function (arr) {
   return selectedElements;
 };
 
+const getTypeText = function (type) {
+  const selectedType = type;
+
+  switch (selectedType) {
+    case `palace`: return `Дворец`;
+    case `flat`: return `Квартира`;
+    case `house`: return `Дом`;
+    case `bungalow`: return `Бунгало`;
+  }
+
+  return selectedType;
+};
+
 const getSimilarPins = function (count) {
   const similarPins = [];
 
@@ -91,7 +106,7 @@ const getSimilarPins = function (count) {
         avatar: `img/avatars/user0${i + 1}.png`
       },
       offer: {
-        title: `Здесь должен быть заголовок`,
+        title: `Здесь должен быть заголовок объявления`,
         address: `${locationX}, ${locationY}`,
         price: getRandomPrice(), // Temporary random value
         type: `${getRandomElement(APARTMENT_TYPES)}`,
@@ -123,6 +138,42 @@ const createPins = function (pin) {
   return mapPin;
 };
 
+const createCard = function (pin) {
+  const popupCard = popupCardTemplate.cloneNode(true);
+  const featureList = popupCard.querySelector(`.popup__features`);
+  const features = pin.offer.features;
+  const photosContainer = popupCard.querySelector(`.popup__photos`);
+  const photos = pin.offer.photos;
+
+  popupCard.querySelector(`.popup__title`).textContent = pin.offer.title;
+  popupCard.querySelector(`.popup__text--address`).textContent = pin.offer.address;
+  popupCard.querySelector(`.popup__text--price`).textContent = `${pin.offer.price}₽/ночь`;
+  popupCard.querySelector(`.popup__type`).textContent = `${getTypeText(pin.offer.type)}`;
+  popupCard.querySelector(`.popup__text--capacity`).textContent = `${pin.offer.rooms} комнаты для ${pin.offer.guests} гостей`;
+  popupCard.querySelector(`.popup__text--time`).textContent = `Заезд после ${pin.offer.checkin}, выезд до ${pin.offer.checkout}`;
+  popupCard.querySelector(`.popup__description`).textContent = `${pin.offer.description}`;
+
+  featureList.innerHTML = ``;
+  for (let i = 0; i < features.length; i++) {
+    const feature = document.createElement(`li`);
+    feature.classList.add(`popup__feature`, `popup__feature--${features[i]}`);
+    featureList.appendChild(feature);
+  }
+
+  photosContainer.innerHTML = ``;
+  for (let i = 0; i < photos.length; i++) {
+    const photo = document.createElement(`img`);
+    photo.classList.add(`popup__photo`);
+    photo.src = `${photos[i]}`;
+    photo.width = 45;
+    photo.height = 40;
+    photo.alt = `Фотография жилья`;
+    photosContainer.appendChild(photo);
+  }
+
+  return popupCard;
+};
+
 const pins = getSimilarPins(OFFERS_COUNT);
 const pinFragment = document.createDocumentFragment();
 
@@ -131,5 +182,9 @@ for (let i = 0; i < pins.length; i++) {
 }
 
 mapPinsContainer.appendChild(pinFragment);
+
+const cardFragment = document.createDocumentFragment();
+cardFragment.appendChild(createCard(pins[0]));
+map.insertBefore(cardFragment, mapFiltersContainer);
 
 map.classList.remove(`map--faded`);
