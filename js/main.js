@@ -13,23 +13,13 @@ const MAX_ROOMS_COUNT = 3;
 const MIN_GUESTS_COUNT = 1;
 const MAX_GUESTS_COUNT = 3;
 const TIMES = [`12:00`, `13:00`, `14:00`];
-const TITLES = [
-  `Большая уютная квартира`,
-  `Маленькая неуютная квартира`,
-  `Огромный прекрасный дворец`,
-  `Маленький ужасный дворец`,
-  `Красивый гостевой домик`,
-  `Некрасивый негостеприимный домик`,
-  `Уютное бунгало далеко от моря`,
-  `Неуютное бунгало по колено в воде`
-];
 const FEATURES = [
-  // `wifi`,
-  // `dishwasher`,
-  // `parking`,
-  // `washer`,
-  // `elevator`,
-  // `conditioner`
+  `wifi`,
+  `dishwasher`,
+  `parking`,
+  `washer`,
+  `elevator`,
+  `conditioner`
 ];
 const PHOTOS_SRC = [
   `http://o0.github.io/assets/images/tokyo/hotel1.jpg`,
@@ -41,6 +31,24 @@ const typesMap = {
   'flat': `Квартира`,
   'house': `Дом`,
   'bungalow': `Бунгало`
+};
+const titlesMap = {
+  'Дворец': [
+    `Огромный прекрасный дворец`,
+    `Маленький ужасный дворец`
+  ],
+  'Квартира': [
+    `Большая уютная квартира`,
+    `Маленькая неуютная квартира`
+  ],
+  'Дом': [
+    `Красивый гостевой домик`,
+    `Некрасивый негостеприимный домик`
+  ],
+  'Бунгало': [
+    `Уютное бунгало далеко от моря`,
+    `Неуютное бунгало по колено в воде`
+  ]
 };
 
 const map = document.querySelector(`.map`);
@@ -108,16 +116,18 @@ const renderPins = function (count) {
     const locationX = getRandomInRange(pinsPosLimits.x.min, pinsPosLimits.x.max);
     const locationY = getRandomInRange(pinsPosLimits.y.min, pinsPosLimits.y.max);
     const time = getRandomElement(TIMES);
+    const type = getRandomElement(APARTMENT_TYPES);
+    const apartmentType = typesMap[type];
 
     pins.push({
       author: {
         avatar: `img/avatars/user0${i + 1}.png`
       },
       offer: {
-        title: `${getRandomElement(TITLES)}`,
+        title: `${getRandomElement(titlesMap[apartmentType])}`,
         address: `${locationX}, ${locationY}`,
         price: getRandomPrice(), // Temporary random value
-        type: `${getRandomElement(APARTMENT_TYPES)}`,
+        type: `${type}`,
         rooms: getRandomInRange(MIN_ROOMS_COUNT, MAX_ROOMS_COUNT), // Temporary value
         guests: getRandomInRange(MIN_GUESTS_COUNT, MAX_GUESTS_COUNT), // Temporary value
         checkin: `${time}`, // Temporary value
@@ -142,6 +152,10 @@ const createPin = function (pin) {
   const {avatar} = author;
   const {title, location} = offer;
 
+  if (!offer) {
+    return false;
+  }
+
   mapPin.style = `left: ${location.x}px; top: ${location.y}px;`;
   mapPin.querySelector(`img`).src = avatar;
   mapPin.querySelector(`img`).alt = title;
@@ -151,23 +165,22 @@ const createPin = function (pin) {
 
 const createCard = function (pin) {
   const {offer} = pin;
-  const {title, address, price, type, features, photos, checkin, checkout, description} = offer;
+  const {title, address, price, type, features, photos, rooms, guests, checkin, checkout, description} = offer;
   const popupCard = popupCardTemplate.cloneNode(true);
   const popupCardChilds = popupCard.children;
   const featureList = popupCard.querySelector(`.popup__features`);
   const photosContainer = popupCard.querySelector(`.popup__photos`);
   const img = popupCard.querySelector(`.popup__photo`);
   let capacity = ``;
-  let time = ``;
 
-  if (pin.offer.rooms === 1 && pin.offer.guests === 1) {
-    capacity = `${pin.offer.rooms} комната для ${pin.offer.guests} гостя`;
-  } else if (pin.offer.rooms === 1 && pin.offer.guests > 1) {
-    capacity = `${pin.offer.rooms} комната для ${pin.offer.guests} гостей`;
-  } else if (pin.offer.rooms > 1 && pin.offer.guests === 1) {
-    capacity = `${pin.offer.rooms} комнаты для ${pin.offer.guests} гостя`;
+  if (rooms === 1 && guests === 1) {
+    capacity = `${rooms} комната для ${guests} гостя`;
+  } else if (rooms === 1 && guests > 1) {
+    capacity = `${rooms} комната для ${guests} гостей`;
+  } else if (rooms > 1 && guests === 1) {
+    capacity = `${rooms} комнаты для ${guests} гостя`;
   } else {
-    capacity = `${pin.offer.rooms} комнаты для ${pin.offer.guests} гостей`;
+    capacity = `${rooms} комнаты для ${guests} гостей`;
   }
 
   popupCard.querySelector(`.popup__title`).textContent = title;
