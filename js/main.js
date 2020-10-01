@@ -134,7 +134,7 @@ const renderPins = function (count) {
         checkout: `${time}`, // Temporary value
         features: getRandomArr(FEATURES),
         description: `Здесь должно быть описание квартиры`,
-        photos: PHOTOS_SRC,
+        photos: getRandomArr(PHOTOS_SRC),
         location: {
           x: locationX,
           y: locationY
@@ -165,7 +165,19 @@ const createPin = function (pin) {
 
 const createCard = function (pin) {
   const {offer} = pin;
-  const {title, address, price, type, features, photos, rooms, guests, checkin, checkout, description} = offer;
+  const {
+    title,
+    address,
+    price,
+    type,
+    features,
+    photos,
+    rooms,
+    guests,
+    checkin,
+    checkout,
+    description
+  } = offer;
   const popupCard = popupCardTemplate.cloneNode(true);
   const popupCardChilds = popupCard.children;
   const featureList = popupCard.querySelector(`.popup__features`);
@@ -176,7 +188,7 @@ const createCard = function (pin) {
   if (rooms === 1 && guests === 1) {
     capacity = `${rooms} комната для ${guests} гостя`;
   } else if (rooms === 1 && guests > 1) {
-    capacity = `${rooms} комната для ${guests} гостей`;
+    capacity = `${rooms} комната для ${guests} гостей`; // Need function
   } else if (rooms > 1 && guests === 1) {
     capacity = `${rooms} комнаты для ${guests} гостя`;
   } else {
@@ -195,7 +207,7 @@ const createCard = function (pin) {
   for (let i = 0; i < features.length; i++) {
     if (features.length !== 0) {
       const feature = document.createElement(`li`);
-      feature.classList.add(`popup__feature`, `popup__feature--${features[i]}`);
+      feature.classList.add(`popup__feature`, `popup__feature--${features[i]}`); // Need to function
       featureList.appendChild(feature);
     }
   }
@@ -204,7 +216,7 @@ const createCard = function (pin) {
     photosContainer.appendChild(img.cloneNode(true));
   }
 
-  const images = popupCard.querySelectorAll(`.popup__photo`);
+  const images = popupCard.querySelectorAll(`.popup__photo`); // Need to function
 
   for (let i = 0; i < photos.length; i++) {
     images[i].src = photos[i];
@@ -212,7 +224,7 @@ const createCard = function (pin) {
 
   for (let i = 0; i < popupCardChilds.length; i++) {
     if (popupCardChilds[i].tagName === `P` || popupCardChilds[i].tagName === `H4`) {
-      if (popupCardChilds[i].textContent === 0 || popupCardChilds[i].textContent === ``) {
+      if (popupCardChilds[i].textContent === 0 || popupCardChilds[i].textContent === ``) { // Not working correctly
         popupCardChilds[i].remove();
       }
     }
