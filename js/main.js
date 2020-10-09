@@ -13,6 +13,8 @@ const MAX_ROOMS_COUNT = 3;
 const MIN_GUESTS_COUNT = 1;
 const MAX_GUESTS_COUNT = 3;
 const TIMES = [`12:00`, `13:00`, `14:00`];
+const ROOMS_DECLENSION = [`комната`, `комнаты`, `комнат`];
+const GUESTS_DECLENSION = [`гостя`, `гостей`, `гостей`];
 const FEATURES = [
   `wifi`,
   `dishwasher`,
@@ -71,7 +73,7 @@ const pinsPosLimits = {
   }
 };
 
-const shuffleArray = function (arr) {
+const shuffleArray = (arr) => {
   const newArr = arr.slice();
 
   for (let i = arr.length - 1; i > 0; i--) {
@@ -82,19 +84,19 @@ const shuffleArray = function (arr) {
   return newArr;
 };
 
-const getRandomPrice = function () {
+const getRandomPrice = () => {
   return Math.floor(Math.random() * 100) * 100;
 };
 
-const getRandomElement = function (arr) {
+const getRandomElement = (arr) => {
   return arr[Math.floor(Math.random() * arr.length)];
 };
 
-const getRandomInRange = function (min, max) {
+const getRandomInRange = (min, max) => {
   return Math.floor(min + Math.random() * (max + 1 - min));
 };
 
-const getRandomArr = function (arr) {
+const getRandomArr = (arr) => {
   const selectedElements = [];
 
   if (arr.length !== 0) {
@@ -109,7 +111,23 @@ const getRandomArr = function (arr) {
   return selectedElements;
 };
 
-const renderPins = function (count) {
+const declTextByNumber = (number, textWordsArr) => {
+  const a = Math.abs(number) % 100;
+  const b = number % 10;
+
+  if (a > 10 && a < 20) {
+    return textWordsArr[2];
+  }
+  if (b > 1 && b < 5) {
+    return textWordsArr[1];
+  }
+  if (b === 1) {
+    return textWordsArr[0];
+  }
+  return textWordsArr[2];
+};
+
+const renderPins = (count) => {
   const pins = [];
 
   for (let i = 0; i < count; i++) {
@@ -146,7 +164,7 @@ const renderPins = function (count) {
   return pins;
 };
 
-const createPin = function (pin) {
+const createPin = (pin) => {
   const mapPin = mapPinTemplate.cloneNode(true);
   const {author, offer} = pin;
   const {avatar} = author;
@@ -163,25 +181,28 @@ const createPin = function (pin) {
   return mapPin;
 };
 
-const createCard = function (pin) {
+const createCard = (pin) => {
   const {offer} = pin;
-  const {title, address, price, type, features, photos, rooms, guests, checkin, checkout, description} = offer;
+  const {
+    title,
+    address,
+    price,
+    type,
+    features,
+    photos,
+    rooms,
+    guests,
+    checkin,
+    checkout,
+    description
+  } = offer;
   const popupCard = popupCardTemplate.cloneNode(true);
   const popupCardChilds = popupCard.children;
   const featureList = popupCard.querySelector(`.popup__features`);
   const photosContainer = popupCard.querySelector(`.popup__photos`);
   const img = popupCard.querySelector(`.popup__photo`);
-  let capacity = ``;
-
-  if (rooms === 1 && guests === 1) {
-    capacity = `${rooms} комната для ${guests} гостя`;
-  } else if (rooms === 1 && guests > 1) {
-    capacity = `${rooms} комната для ${guests} гостей`;
-  } else if (rooms > 1 && guests === 1) {
-    capacity = `${rooms} комнаты для ${guests} гостя`;
-  } else {
-    capacity = `${rooms} комнаты для ${guests} гостей`;
-  }
+  const capacity = `${rooms} ${declTextByNumber(rooms, ROOMS_DECLENSION)} для
+    ${guests} ${declTextByNumber(guests, GUESTS_DECLENSION)}`;
 
   popupCard.querySelector(`.popup__title`).textContent = title;
   popupCard.querySelector(`.popup__text--address`).textContent = address;
@@ -229,9 +250,9 @@ const createCard = function (pin) {
 const pins = renderPins(OFFERS_COUNT);
 const pinFragment = document.createDocumentFragment();
 
-for (let i = 0; i < pins.length; i++) {
-  pinFragment.appendChild(createPin(pins[i]));
-}
+pins.forEach((elem) => {
+  pinFragment.appendChild(createPin(elem));
+});
 
 mapPinsContainer.appendChild(pinFragment);
 
