@@ -152,7 +152,7 @@ const renderPins = (count) => {
         checkout: `${time}`, // Temporary value
         features: getRandomArr(FEATURES),
         description: `Здесь должно быть описание квартиры`,
-        photos: PHOTOS_SRC,
+        photos: getRandomArr(PHOTOS_SRC),
         location: {
           x: locationX,
           y: locationY
@@ -181,6 +181,62 @@ const createPin = (pin) => {
   return mapPin;
 };
 
+const createFeatures = (featuresArr, parentElement) => {
+  if (featuresArr.length === 0) {
+    parentElement.remove();
+    return;
+  }
+  for (let i = 0; i < featuresArr.length; i++) {
+    const feature = document.createElement(`li`);
+    feature.classList.add(`popup__feature`, `popup__feature--${featuresArr[i]}`);
+    parentElement.appendChild(feature);
+  }
+};
+
+const createPhotos = (photosArr, parentElement) => {
+  if (photosArr.length === 0) {
+    parentElement.remove();
+    return;
+  }
+  if (parentElement.children !== 0) {
+    for (let i = 0; i < photosArr.length - 1; i++) {
+      parentElement.appendChild(parentElement.children[0].cloneNode(true));
+    }
+  }
+  const images = parentElement.children;
+
+  for (let i = 0; i < photosArr.length; i++) {
+    images[i].src = photosArr[i];
+  }
+};
+
+const getPriceValue = (price) => {
+  if (price) {
+    return `${price}₽/ночь`;
+  } else {
+    return ``;
+  }
+};
+
+const checkCardElements = (cardElement) => {
+  switch (cardElement.tagName) {
+    case `P`:
+    case `H4`:
+    case `H3`:
+      if (cardElement.textContent === ``) {
+        cardElement.remove();
+      }
+      break;
+    case `IMG`:
+      if (!cardElement.src) {
+        cardElement.remove();
+      }
+      break;
+    default:
+      break;
+  }
+};
+
 const createCard = (pin) => {
   const {offer} = pin;
   const {
@@ -200,48 +256,25 @@ const createCard = (pin) => {
   const popupCardChilds = popupCard.children;
   const featureList = popupCard.querySelector(`.popup__features`);
   const photosContainer = popupCard.querySelector(`.popup__photos`);
-  const img = popupCard.querySelector(`.popup__photo`);
-  const capacity = `${rooms} ${declTextByNumber(rooms, ROOMS_DECLENSION)} для
-    ${guests} ${declTextByNumber(guests, GUESTS_DECLENSION)}`;
+  const roomsDecl = declTextByNumber(rooms, ROOMS_DECLENSION);
+  const guestsDecl = declTextByNumber(guests, GUESTS_DECLENSION);
+  const capacity = `${rooms} ${roomsDecl} для ${guests} ${guestsDecl}`;
 
   popupCard.querySelector(`.popup__title`).textContent = title;
   popupCard.querySelector(`.popup__text--address`).textContent = address;
-  popupCard.querySelector(`.popup__text--price`).textContent = `${price}₽/ночь`;
+  popupCard.querySelector(`.popup__text--price`).textContent = getPriceValue(price);
   popupCard.querySelector(`.popup__type`).textContent = `${typesMap[type]}`;
   popupCard.querySelector(`.popup__text--capacity`).textContent = capacity;
   popupCard.querySelector(`.popup__text--time`).textContent = `Заезд после ${checkin}, выезд до ${checkout}`;
   popupCard.querySelector(`.popup__description`).textContent = `${description}`;
 
   featureList.innerHTML = ``;
-  for (let i = 0; i < features.length; i++) {
-    if (features.length !== 0) {
-      const feature = document.createElement(`li`);
-      feature.classList.add(`popup__feature`, `popup__feature--${features[i]}`);
-      featureList.appendChild(feature);
-    }
-  }
+  createFeatures(features, featureList);
 
-  for (let i = 0; i < photos.length - 1; i++) {
-    photosContainer.appendChild(img.cloneNode(true));
-  }
-
-  const images = popupCard.querySelectorAll(`.popup__photo`);
-
-  for (let i = 0; i < photos.length; i++) {
-    images[i].src = photos[i];
-  }
+  createPhotos(photos, photosContainer);
 
   for (let i = 0; i < popupCardChilds.length; i++) {
-    if (popupCardChilds[i].tagName === `P` || popupCardChilds[i].tagName === `H4`) {
-      if (popupCardChilds[i].textContent === 0 || popupCardChilds[i].textContent === ``) {
-        popupCardChilds[i].remove();
-      }
-    }
-    if (popupCardChilds[i].tagName === `UL` || popupCardChilds[i].tagName === `DIV`) {
-      if (popupCardChilds[i].children.length === 0) {
-        popupCardChilds[i].remove();
-      }
-    }
+    checkCardElements(popupCardChilds[i]);
   }
 
   return popupCard;
