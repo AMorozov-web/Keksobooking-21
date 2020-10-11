@@ -1,6 +1,9 @@
 'use strict';
 
 const OFFERS_COUNT = 8;
+const MAIN_PIN_OFFSET_X = 62;
+const MAIN_PIN_OFFSET_Y = 62;
+const MAIN_PIN_ACTIVE_OFFSET_Y = 75;
 const PIN_OFFSET_X = 50;
 const PIN_OFFSET_Y = 70;
 // const MIN_PIN_POS_Y = 130; // temporarily not used
@@ -70,6 +73,20 @@ const pinsPosLimits = {
   y: {
     min: mainPinTop - PINS_POS_INTERVAL_Y - PIN_OFFSET_Y,
     max: mainPinTop + PINS_POS_INTERVAL_Y - PIN_OFFSET_Y
+  }
+};
+const mapFiltersForm = document.querySelector(`.map__filters`);
+const adForm = document.querySelector(`.ad-form`);
+
+const disableElements = (parentElem) => {
+  for (let i = 0; i < parentElem.children.length; i++) {
+    parentElem.children[i].setAttribute(`disabled`, true);
+  }
+};
+
+const enableElements = (parentElem) => {
+  for (let i = 0; i < parentElem.children.length; i++) {
+    parentElem.children[i].removeAttribute(`disabled`);
   }
 };
 
@@ -221,8 +238,8 @@ const getPriceValue = (price) => {
 const checkCardElements = (cardElement) => {
   switch (cardElement.tagName) {
     case `P`:
-    case `H4`:
     case `H3`:
+    case `H4`:
       if (cardElement.textContent === ``) {
         cardElement.remove();
       }
@@ -238,7 +255,8 @@ const checkCardElements = (cardElement) => {
 };
 
 const createCard = (pin) => {
-  const {offer} = pin;
+  const {author, offer} = pin;
+  const {avatar} = author;
   const {
     title,
     address,
@@ -260,6 +278,7 @@ const createCard = (pin) => {
   const guestsDecl = declTextByNumber(guests, GUESTS_DECLENSION);
   const capacity = `${rooms} ${roomsDecl} для ${guests} ${guestsDecl}`;
 
+  popupCard.querySelector(`.popup__avatar`).src = avatar;
   popupCard.querySelector(`.popup__title`).textContent = title;
   popupCard.querySelector(`.popup__text--address`).textContent = address;
   popupCard.querySelector(`.popup__text--price`).textContent = getPriceValue(price);
@@ -280,17 +299,48 @@ const createCard = (pin) => {
   return popupCard;
 };
 
+const setAddress = () => {
+  const input = adForm.querySelector(`input[name="address"]`);
+  const fieldset = input.parentElement;
+  if (!fieldset.getAttribute(`disabled`)) {
+    input.value = `${mainPinTop + MAIN_PIN_ACTIVE_OFFSET_Y}, ${mainPinLeft + MAIN_PIN_OFFSET_X / 2}`;
+  } else {
+    input.value = `${mainPinTop + MAIN_PIN_OFFSET_Y / 2}, ${mainPinLeft + MAIN_PIN_OFFSET_X / 2}`;
+  }
+};
+
+const onMainPinPressEnter = (evt) => {
+  if (evt.key === `Enter`) {
+    evt.preventDefault();
+    onCLickActivatePage();
+  }
+};
+
+const onCLickActivatePage = () => {
+  map.classList.remove(`map--faded`);
+  adForm.classList.remove(`ad-form--disabled`);
+
+  enableElements(mapFiltersForm);
+  enableElements(adForm);
+  setAddress();
+};
+
+disableElements(mapFiltersForm);
+disableElements(adForm);
+setAddress();
+
+mainPin.addEventListener(`mousedown`, onCLickActivatePage);
+mainPin.addEventListener(`keydown`, onMainPinPressEnter);
+
+// Закомментируй все что ниже перед проверкой
+
 const pins = renderPins(OFFERS_COUNT);
 const pinFragment = document.createDocumentFragment();
-
 pins.forEach((elem) => {
   pinFragment.appendChild(createPin(elem));
 });
-
 mapPinsContainer.appendChild(pinFragment);
 
 const cardFragment = document.createDocumentFragment();
 cardFragment.appendChild(createCard(pins[0]));
 map.insertBefore(cardFragment, mapFiltersContainer);
-
-map.classList.remove(`map--faded`);
