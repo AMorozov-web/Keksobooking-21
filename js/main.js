@@ -299,6 +299,20 @@ const createCard = (pin) => {
   return popupCard;
 };
 
+const placePins = (pins) => {
+  const pinFragment = document.createDocumentFragment();
+  pins.forEach((elem) => {
+    pinFragment.appendChild(createPin(elem));
+  });
+  mapPinsContainer.appendChild(pinFragment);
+};
+
+const placeCard = (pins) => {
+  const cardFragment = document.createDocumentFragment();
+  cardFragment.appendChild(createCard(pins[0]));
+  map.insertBefore(cardFragment, mapFiltersContainer);
+};
+
 const setAddress = () => {
   const input = adForm.querySelector(`input[name="address"]`);
   const fieldset = input.parentElement;
@@ -335,12 +349,5 @@ mainPin.addEventListener(`keydown`, onMainPinPressEnter);
 // Закомментируй все что ниже перед проверкой
 
 const pins = renderPins(OFFERS_COUNT);
-const pinFragment = document.createDocumentFragment();
-pins.forEach((elem) => {
-  pinFragment.appendChild(createPin(elem));
-});
-mapPinsContainer.appendChild(pinFragment);
-
-const cardFragment = document.createDocumentFragment();
-cardFragment.appendChild(createCard(pins[0]));
-map.insertBefore(cardFragment, mapFiltersContainer);
+placePins(pins);
+placeCard(pins);
