@@ -59,6 +59,7 @@ const titlesMap = {
 const map = document.querySelector(`.map`);
 const mapFiltersForm = document.querySelector(`.map__filters`);
 const adForm = document.querySelector(`.ad-form`);
+const inputAddress = adForm.querySelector(`input[name="address"]`);
 const mapFiltersContainer = document.querySelector(`.map__filters-container`);
 const mainPin = document.querySelector(`.map__pin--main`);
 const mainPinTop = parseInt((getComputedStyle(mainPin, null).top), 10);
@@ -77,6 +78,7 @@ const pinsPosLimits = {
     max: mainPinTop + PINS_POS_INTERVAL_Y - PIN_OFFSET_Y
   }
 };
+let isPageActive = false;
 
 const disableElements = (parentElem) => {
   for (let i = 0; i < parentElem.children.length; i++) {
@@ -180,6 +182,8 @@ const renderPins = (count) => {
 
   return pins;
 };
+
+const pins = renderPins(OFFERS_COUNT);
 
 const createPin = (pin) => {
   const mapPin = mapPinTemplate.cloneNode(true);
@@ -299,7 +303,7 @@ const createCard = (pin) => {
   return popupCard;
 };
 
-const placePins = (pins) => {
+const placePins = () => {
   const pinFragment = document.createDocumentFragment();
   pins.forEach((elem) => {
     pinFragment.appendChild(createPin(elem));
@@ -307,30 +311,27 @@ const placePins = (pins) => {
   mapPinsContainer.appendChild(pinFragment);
 };
 
-const placeCard = (pins) => {
+const placeCard = () => {
   const cardFragment = document.createDocumentFragment();
   cardFragment.appendChild(createCard(pins[0]));
   map.insertBefore(cardFragment, mapFiltersContainer);
 };
 
 const setAddress = () => {
-  const input = adForm.querySelector(`input[name="address"]`);
-  const fieldset = input.parentElement;
-  if (!fieldset.getAttribute(`disabled`)) {
-    input.value = `${mainPinTop + MAIN_PIN_ACTIVE_OFFSET_Y}, ${mainPinLeft + MAIN_PIN_OFFSET_X / 2}`;
-  } else {
-    input.value = `${mainPinTop + MAIN_PIN_OFFSET_Y / 2}, ${mainPinLeft + MAIN_PIN_OFFSET_X / 2}`;
-  }
+  const x = mainPinLeft + MAIN_PIN_OFFSET_X / 2;
+  const y = (isPageActive) ? mainPinTop + MAIN_PIN_ACTIVE_OFFSET_Y : mainPinTop + MAIN_PIN_OFFSET_Y / 2;
+  inputAddress.value = `${x}, ${y}`;
 };
 
 const onMainPinPressEnter = (evt) => {
   if (evt.key === `Enter`) {
     evt.preventDefault();
-    onCLickActivatePage();
+    activatePage();
   }
 };
 
-const onCLickActivatePage = () => {
+const activatePage = () => {
+  isPageActive = true;
   map.classList.remove(`map--faded`);
   adForm.classList.remove(`ad-form--disabled`);
 
@@ -339,15 +340,26 @@ const onCLickActivatePage = () => {
   setAddress();
 };
 
-disableElements(mapFiltersForm);
-disableElements(adForm);
-setAddress();
+const deactivatePage = () => {
+  isPageActive = false;
+  if (!map.classList.contains(`map--faded`)) {
+    map.classList.add(`map--faded`);
+  }
+  if (!adForm.classList.contains(`ad-form--disabled`)) {
+    adForm.classList.add(`ad-form--disabled`);
+  }
 
-mainPin.addEventListener(`mousedown`, onCLickActivatePage);
+  disableElements(mapFiltersForm);
+  disableElements(adForm);
+  setAddress();
+};
+
+deactivatePage();
+
+mainPin.addEventListener(`mousedown`, activatePage);
 mainPin.addEventListener(`keydown`, onMainPinPressEnter);
 
 // Закомментируй все что ниже перед проверкой
 
-const pins = renderPins(OFFERS_COUNT);
-placePins(pins);
-placeCard(pins);
+placePins();
+placeCard();
