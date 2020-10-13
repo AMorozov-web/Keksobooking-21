@@ -62,8 +62,8 @@ const adForm = document.querySelector(`.ad-form`);
 const inputAddress = adForm.querySelector(`input[name="address"]`);
 const mapFiltersContainer = document.querySelector(`.map__filters-container`);
 const mainPin = document.querySelector(`.map__pin--main`);
-const mainPinTop = parseInt((getComputedStyle(mainPin, null).top), 10);
-const mainPinLeft = parseInt((getComputedStyle(mainPin, null).left), 10);
+const mainPinTop = parseInt(mainPin.style.top, 10);
+const mainPinLeft = parseInt(mainPin.style.left, 10);
 const mapPinsContainer = document.querySelector(`.map__pins`);
 const mapPinTemplate = document.querySelector(`#pin`)
   .content.querySelector(`.map__pin`);
@@ -338,6 +338,10 @@ const activatePage = () => {
   enableElements(mapFiltersForm);
   enableElements(adForm);
   setAddress();
+  placePins();
+
+  mainPin.removeEventListener(`mousedown`, activatePage);
+  mainPin.removeEventListener(`keydown`, onMainPinPressEnter);
 };
 
 const deactivatePage = () => {
@@ -352,14 +356,11 @@ const deactivatePage = () => {
   disableElements(mapFiltersForm);
   disableElements(adForm);
   setAddress();
+
+  mainPin.addEventListener(`mousedown`, activatePage);
+  mainPin.addEventListener(`keydown`, onMainPinPressEnter);
 };
 
 deactivatePage();
 
-mainPin.addEventListener(`mousedown`, activatePage);
-mainPin.addEventListener(`keydown`, onMainPinPressEnter);
-
-// Закомментируй все что ниже перед проверкой
-
-placePins();
 placeCard();
