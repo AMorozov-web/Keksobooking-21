@@ -361,12 +361,13 @@ const deactivatePage = () => {
 
   mainPin.addEventListener(`mousedown`, activatePage);
   mainPin.addEventListener(`keydown`, onMainPinPressEnter);
+  mapPinsContainer.removeEventListener(`click`, onPinClickPlaceCard);
 };
 
 const onPinClickPlaceCard = (evt) => {
   const placedPins = mapPinsContainer.querySelectorAll(`.map__pin`);
-  if (evt.target.matches(`button[type="button"]`) && !evt.target.classList.contains(`map__pin--main`)) {
-    console.log(evt.target.className);
+  if (evt.target.closest(`button[type="button"]`) && !evt.target.classList.contains(`map__pin--main`)) {
+    console.log(evt.target.closest(`button[type="button"]`));
   }
 };
 
