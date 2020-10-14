@@ -313,7 +313,8 @@ const placePins = () => {
 
 const placeCard = () => {
   const cardFragment = document.createDocumentFragment();
-  cardFragment.appendChild(createCard(pins[0]));
+  const card = createCard(pins[0]);
+  cardFragment.appendChild(card);
   map.insertBefore(cardFragment, mapFiltersContainer);
 };
 
@@ -342,6 +343,7 @@ const activatePage = () => {
 
   mainPin.removeEventListener(`mousedown`, activatePage);
   mainPin.removeEventListener(`keydown`, onMainPinPressEnter);
+  mapPinsContainer.addEventListener(`click`, onPinClickPlaceCard);
 };
 
 const deactivatePage = () => {
@@ -361,6 +363,11 @@ const deactivatePage = () => {
   mainPin.addEventListener(`keydown`, onMainPinPressEnter);
 };
 
-deactivatePage();
+const onPinClickPlaceCard = (evt) => {
+  const placedPins = mapPinsContainer.querySelectorAll(`.map__pin`);
+  if (evt.target.matches(`button[type="button"]`) && !evt.target.classList.contains(`map__pin--main`)) {
+    console.log(evt.target.className);
+  }
+};
 
-placeCard();
+deactivatePage();
