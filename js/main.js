@@ -147,7 +147,7 @@ const declTextByNumber = (number, textWordsArr) => {
 };
 
 const renderPins = (count) => {
-  const pins = [];
+  const pinsData = [];
 
   for (let i = 0; i < count; i++) {
     const locationX = getRandomInRange(pinsPosLimits.x.min, pinsPosLimits.x.max);
@@ -156,7 +156,7 @@ const renderPins = (count) => {
     const type = getRandomElement(APARTMENT_TYPES);
     const apartmentType = typesMap[type];
 
-    pins.push({
+    pinsData.push({
       author: {
         avatar: `img/avatars/user0${i + 1}.png`
       },
@@ -180,10 +180,15 @@ const renderPins = (count) => {
     });
   }
 
-  return pins;
+  return pinsData;
 };
 
-const pins = renderPins(OFFERS_COUNT);
+const setIdToElements = (elementsArr) => {
+  //
+};
+
+const pinsData = renderPins(OFFERS_COUNT);
+const pins = pinsData.map();
 
 const createPin = (pin) => {
   const mapPin = mapPinTemplate.cloneNode(true);
@@ -312,10 +317,12 @@ const placePins = () => {
 };
 
 const placeCard = () => {
-  const cardFragment = document.createDocumentFragment();
-  const card = createCard(pins[0]);
-  cardFragment.appendChild(card);
-  map.insertBefore(cardFragment, mapFiltersContainer);
+  if (!map.querySelector(`.popup`)) {
+    const cardFragment = document.createDocumentFragment();
+    const card = createCard(pins[0]);
+    cardFragment.appendChild(card);
+    map.insertBefore(cardFragment, mapFiltersContainer);
+  }
 };
 
 const setAddress = () => {
