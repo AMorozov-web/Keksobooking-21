@@ -6,18 +6,33 @@ const MAIN_PIN_OFFSET_Y = 62;
 const MAIN_PIN_ACTIVE_OFFSET_Y = 75;
 const PIN_OFFSET_X = 50;
 const PIN_OFFSET_Y = 70;
-// const MIN_PIN_POS_Y = 130; // temporarily not used
-// const MAX_PIN_POS_Y = 630; // temporarily not used
 const PINS_POS_INTERVAL_X = 220;
 const PINS_POS_INTERVAL_Y = 100;
-const APARTMENT_TYPES = [`palace`, `flat`, `house`, `bungalow`];
 const MIN_ROOMS_COUNT = 1;
 const MAX_ROOMS_COUNT = 3;
 const MIN_GUESTS_COUNT = 1;
 const MAX_GUESTS_COUNT = 3;
-const TIMES = [`12:00`, `13:00`, `14:00`];
-const ROOMS_DECLENSION = [`комната`, `комнаты`, `комнат`];
-const GUESTS_DECLENSION = [`гостя`, `гостей`, `гостей`];
+const APARTMENT_TYPES = [
+  `palace`,
+  `flat`,
+  `house`,
+  `bungalow`
+];
+const TIMES = [
+  `12:00`,
+  `13:00`,
+  `14:00`
+];
+const ROOMS_DECLENSION = [
+  `комната`,
+  `комнаты`,
+  `комнат`
+];
+const GUESTS_DECLENSION = [
+  `гостя`,
+  `гостей`,
+  `гостей`
+];
 const FEATURES = [
   `wifi`,
   `dishwasher`,
@@ -80,15 +95,9 @@ const pinsPosLimits = {
 };
 let isPageActive = false;
 
-const disableElements = (parentElem) => {
-  for (let i = 0; i < parentElem.children.length; i++) {
-    parentElem.children[i].setAttribute(`disabled`, true);
-  }
-};
-
-const enableElements = (parentElem) => {
-  for (let i = 0; i < parentElem.children.length; i++) {
-    parentElem.children[i].removeAttribute(`disabled`);
+const toggleFormElements = (parentElem, state = false) => {
+  for (let elem of parentElem.children) {
+    elem.disabled = state;
   }
 };
 
@@ -300,8 +309,8 @@ const createCard = (pin) => {
 
   createPhotos(photos, photosContainer);
 
-  for (let i = 0; i < popupCardChilds.length; i++) {
-    checkCardElements(popupCardChilds[i]);
+  for (let child of popupCardChilds) {
+    checkCardElements(child);
   }
 
   popupCloseButton.addEventListener(`click`, () => {
@@ -320,12 +329,15 @@ const placePins = () => {
 };
 
 const placeCard = (elem) => {
-  if (!map.querySelector(`.popup`)) {
-    const cardFragment = document.createDocumentFragment();
-    const card = createCard(elem);
-    cardFragment.appendChild(card);
-    map.insertBefore(cardFragment, mapFiltersContainer);
+  const popup = map.querySelector(`.popup`);
+  if (popup) {
+    popup.remove();
   }
+  const cardFragment = document.createDocumentFragment();
+  const card = createCard(elem);
+  cardFragment.appendChild(card);
+  map.insertBefore(cardFragment, mapFiltersContainer);
+  document.addEventListener(`keydown`, onCardPressEsc);
 };
 
 const setAddress = () => {
@@ -346,8 +358,8 @@ const activatePage = () => {
   map.classList.remove(`map--faded`);
   adForm.classList.remove(`ad-form--disabled`);
 
-  enableElements(mapFiltersForm);
-  enableElements(adForm);
+  toggleFormElements(mapFiltersForm);
+  toggleFormElements(adForm);
   setAddress();
   placePins();
 
@@ -365,8 +377,8 @@ const deactivatePage = () => {
     adForm.classList.add(`ad-form--disabled`);
   }
 
-  disableElements(mapFiltersForm);
-  disableElements(adForm);
+  toggleFormElements(mapFiltersForm, true);
+  toggleFormElements(adForm, true);
   setAddress();
 
   mainPin.addEventListener(`mousedown`, activatePage);
@@ -380,6 +392,14 @@ const onPinClickPlaceCard = (evt) => {
     const buttonId = pinButton.dataset.id;
     placeCard(pins[buttonId]);
   }
+};
+
+const onCardPressEsc = (evt) => {
+  const popupCard = map.querySelector(`.popup`);
+  if (popupCard && evt.key === `Escape`) {
+    popupCard.remove();
+  }
+  document.removeEventListener(`keydown`, onCardPressEsc);
 };
 
 deactivatePage();
