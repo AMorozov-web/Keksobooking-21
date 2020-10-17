@@ -1,8 +1,8 @@
 'use strict';
 
 const OFFERS_COUNT = 8;
-const MAIN_PIN_OFFSET_X = 62;
-const MAIN_PIN_OFFSET_Y = 62;
+const MAIN_PIN_OFFSET_X = 65;
+const MAIN_PIN_OFFSET_Y = 65;
 const MAIN_PIN_ACTIVE_OFFSET_Y = 75;
 const PIN_OFFSET_X = 50;
 const PIN_OFFSET_Y = 70;
@@ -155,7 +155,7 @@ const declTextByNumber = (number, textWordsArr) => {
   return textWordsArr[2];
 };
 
-const renderPins = (count) => {
+const generateData = (count) => {
   const pinsData = [];
 
   for (let i = 0; i < count; i++) {
@@ -193,12 +193,17 @@ const renderPins = (count) => {
 };
 
 const setIdToPins = (pinsArr) => {
-  pinsArr.forEach((elem, index) => (elem.offer.id = index));
+  const newArr = pinsArr.slice();
+
+  newArr.forEach((elem, index) => {
+    elem.offer.id = index;
+  });
+
+  return newArr;
 };
 
-const pinsData = renderPins(OFFERS_COUNT);
-const pins = pinsData.slice();
-setIdToPins(pins);
+const pinsData = generateData(OFFERS_COUNT);
+const pins = setIdToPins(pinsData);
 
 const createPin = (pin) => {
   const mapPin = mapPinTemplate.cloneNode(true);
@@ -227,6 +232,7 @@ const createFeatures = (featuresArr, parentElement) => {
     parentElement.remove();
     return;
   }
+
   for (let i = 0; i < featuresArr.length; i++) {
     const feature = document.createElement(`li`);
     feature.classList.add(`popup__feature`, `popup__feature--${featuresArr[i]}`);
@@ -239,16 +245,14 @@ const createPhotos = (photosArr, parentElement) => {
     parentElement.remove();
     return;
   }
-  if (parentElement.children !== 0) {
-    for (let i = 0; i < photosArr.length - 1; i++) {
-      parentElement.appendChild(parentElement.children[0].cloneNode(true));
-    }
-  }
-  const images = parentElement.children;
 
-  for (let i = 0; i < photosArr.length; i++) {
-    images[i].src = photosArr[i];
-  }
+  const photo = parentElement.querySelector(`.popup__photo`).cloneNode(true);
+  parentElement.innerHTML = ``;
+
+  photosArr.forEach((elem) => {
+    parentElement.appendChild(photo);
+    photo.src = elem;
+  });
 };
 
 const checkCardElements = (cardElement) => {
@@ -284,7 +288,8 @@ const createCard = (pin) => {
     guests,
     checkin,
     checkout,
-    description
+    description,
+    id
   } = offer;
   const popupCard = popupCardTemplate.cloneNode(true);
   const popupCardChilds = popupCard.children;
@@ -315,6 +320,7 @@ const createCard = (pin) => {
 
   popupCloseButton.addEventListener(`click`, () => {
     popupCard.remove();
+    mapPinsContainer.querySelector(`.map__pin[data-id="${id}"]`).classList.remove(`map__pin--active`);
   });
 
   return popupCard;
@@ -322,27 +328,30 @@ const createCard = (pin) => {
 
 const placePins = () => {
   const pinFragment = document.createDocumentFragment();
+
   pinsData.forEach((elem) => {
     pinFragment.appendChild(createPin(elem));
   });
+
   mapPinsContainer.appendChild(pinFragment);
 };
 
 const placeCard = (elem) => {
   const popup = map.querySelector(`.popup`);
   if (popup) {
+    const popupId = popup.dataset.id;
     popup.remove();
+    mapPinsContainer.querySelector(`.map__pin[data-id="${popupId}"]`).classList.remove(`map__pin--active`);
   }
-  const cardFragment = document.createDocumentFragment();
   const card = createCard(elem);
-  cardFragment.appendChild(card);
-  map.insertBefore(cardFragment, mapFiltersContainer);
+  card.dataset.id = elem.offer.id;
+  map.insertBefore(card, mapFiltersContainer);
   document.addEventListener(`keydown`, onCardPressEsc);
 };
 
 const setAddress = () => {
-  const x = mainPinLeft + MAIN_PIN_OFFSET_X / 2;
-  const y = (isPageActive) ? mainPinTop + MAIN_PIN_ACTIVE_OFFSET_Y : mainPinTop + MAIN_PIN_OFFSET_Y / 2;
+  const x = Math.floor(mainPinLeft + MAIN_PIN_OFFSET_X / 2);
+  const y = (isPageActive) ? mainPinTop + MAIN_PIN_ACTIVE_OFFSET_Y : Math.floor(mainPinTop + MAIN_PIN_OFFSET_Y / 2);
   inputAddress.value = `${x}, ${y}`;
 };
 
@@ -388,16 +397,20 @@ const deactivatePage = () => {
 
 const onPinClickPlaceCard = (evt) => {
   const pinButton = evt.target.closest(`button[type="button"]`);
-  if (pinButton && !evt.target.classList.contains(`map__pin--main`)) {
-    const buttonId = pinButton.dataset.id;
-    placeCard(pins[buttonId]);
+  if (pinButton && !evt.target.classList.contains(`map__pin--main`) && !pinButton.classList.contains(`map__pin--active`)) {
+    const buttonId = parseInt(pinButton.dataset.id, 10);
+    const currentPinData = pins.find((item) => (item.offer.id === buttonId));
+    placeCard(currentPinData);
+    pinButton.classList.add(`map__pin--active`);
   }
 };
 
 const onCardPressEsc = (evt) => {
   const popupCard = map.querySelector(`.popup`);
   if (popupCard && evt.key === `Escape`) {
+    const popupCardId = popupCard.dataset.id;
     popupCard.remove();
+    mapPinsContainer.querySelector(`.map__pin[data-id="${popupCardId}"]`).classList.remove(`map__pin--active`);
   }
   document.removeEventListener(`keydown`, onCardPressEsc);
 };
