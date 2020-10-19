@@ -397,7 +397,9 @@ const deactivatePage = () => {
 
 const onPinClickPlaceCard = (evt) => {
   const pinButton = evt.target.closest(`button[type="button"]`);
-  if (pinButton && !evt.target.classList.contains(`map__pin--main`) && !pinButton.classList.contains(`map__pin--active`)) {
+  if (pinButton &&
+      !evt.target.classList.contains(`map__pin--main`) &&
+      !pinButton.classList.contains(`map__pin--active`)) {
     const buttonId = parseInt(pinButton.dataset.id, 10);
     const currentPinData = pins.find((item) => (item.offer.id === buttonId));
     placeCard(currentPinData);
