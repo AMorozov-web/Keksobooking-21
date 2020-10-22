@@ -193,17 +193,15 @@ const generateData = (count) => {
 };
 
 const setIdToPins = (pinsArr) => {
-  const newArr = pinsArr.slice();
-
-  newArr.forEach((elem, index) => {
-    elem.offer.id = index;
-  });
+  const newArr = pinsArr.map((elem, index) => Object.assign({offer: {id: index}}, elem));
 
   return newArr;
 };
 
 const pinsData = generateData(OFFERS_COUNT);
 const pins = setIdToPins(pinsData);
+console.log(pinsData);
+console.log(pins);
 
 const createPin = (pin) => {
   const mapPin = mapPinTemplate.cloneNode(true);
