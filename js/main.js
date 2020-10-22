@@ -323,7 +323,7 @@ const createCard = (pin) => {
   }
 
   popupCloseButton.addEventListener(`click`, () => {
-    removeCard();
+    closeCard();
   });
 
   return popupCard;
@@ -340,14 +340,14 @@ const placePins = () => {
 };
 
 const placeCard = (elem) => {
-  removeCard();
+  closeCard();
 
   const card = createCard(elem);
   map.insertBefore(card, mapFiltersContainer);
   document.addEventListener(`keydown`, onCardPressEsc);
 };
 
-const removeCard = () => {
+const closeCard = () => {
   const popupCard = map.querySelector(`.popup`);
 
   if (popupCard) {
@@ -421,7 +421,7 @@ const onPinClick = (evt) => {
 
 const onCardPressEsc = (evt) => {
   if (evt.key === `Escape`) {
-    removeCard();
+    closeCard();
   }
 
   document.removeEventListener(`keydown`, onCardPressEsc);
