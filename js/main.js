@@ -146,9 +146,11 @@ const declTextByNumber = (number, textWordsArr) => {
   if (a > 10 && a < 20) {
     return textWordsArr[2];
   }
+
   if (b > 1 && b < 5) {
     return textWordsArr[1];
   }
+
   if (b === 1) {
     return textWordsArr[0];
   }
@@ -193,24 +195,25 @@ const generateData = (count) => {
 };
 
 const setIdToPins = (pinsArr) => {
-  const newArr = pinsArr.map((elem, index) => Object.assign({offer: {id: index}}, elem));
+  const newArr = pinsArr.map((elem, index) => Object.assign({id: index}, elem));
 
   return newArr;
 };
 
 const pinsData = generateData(OFFERS_COUNT);
 const pins = setIdToPins(pinsData);
-console.log(pinsData);
-console.log(pins);
 
 const createPin = (pin) => {
   const mapPin = mapPinTemplate.cloneNode(true);
-  const {author, offer} = pin;
+  const {
+    id,
+    author,
+    offer
+  } = pin;
   const {avatar} = author;
   const {
     title,
     location,
-    id
   } = offer;
 
   if (!offer) {
@@ -254,15 +257,15 @@ const createPhotos = (photosArr, parentElement) => {
 };
 
 const checkCardElements = (cardElement) => {
-  switch (cardElement.tagName) {
-    case `P`:
-    case `H3`:
-    case `H4`:
+  switch (cardElement.tagName.toLowerCase()) {
+    case `p`:
+    case `h3`:
+    case `h4`:
       if (cardElement.textContent === ``) {
         cardElement.remove();
       }
       break;
-    case `IMG`:
+    case `img`:
       if (!cardElement.src) {
         cardElement.remove();
       }
@@ -273,7 +276,10 @@ const checkCardElements = (cardElement) => {
 };
 
 const createCard = (pin) => {
-  const {author, offer} = pin;
+  const {
+    author,
+    offer,
+  } = pin;
   const {avatar} = author;
   const {
     title,
@@ -287,8 +293,8 @@ const createCard = (pin) => {
     checkin,
     checkout,
     description,
-    id
   } = offer;
+
   const popupCard = popupCardTemplate.cloneNode(true);
   const popupCardChilds = popupCard.children;
   const popupCloseButton = popupCard.querySelector(`.popup__close`);
@@ -317,8 +323,7 @@ const createCard = (pin) => {
   }
 
   popupCloseButton.addEventListener(`click`, () => {
-    popupCard.remove();
-    mapPinsContainer.querySelector(`.map__pin[data-id="${id}"]`).classList.remove(`map__pin--active`);
+    removeCard();
   });
 
   return popupCard;
@@ -327,7 +332,7 @@ const createCard = (pin) => {
 const placePins = () => {
   const pinFragment = document.createDocumentFragment();
 
-  pinsData.forEach((elem) => {
+  pins.forEach((elem) => {
     pinFragment.appendChild(createPin(elem));
   });
 
@@ -335,16 +340,20 @@ const placePins = () => {
 };
 
 const placeCard = (elem) => {
-  const popup = map.querySelector(`.popup`);
-  if (popup) {
-    const popupId = popup.dataset.id;
-    popup.remove();
-    mapPinsContainer.querySelector(`.map__pin[data-id="${popupId}"]`).classList.remove(`map__pin--active`);
-  }
+  removeCard();
+
   const card = createCard(elem);
-  card.dataset.id = elem.offer.id;
   map.insertBefore(card, mapFiltersContainer);
   document.addEventListener(`keydown`, onCardPressEsc);
+};
+
+const removeCard = () => {
+  const popupCard = map.querySelector(`.popup`);
+
+  if (popupCard) {
+    popupCard.remove();
+    mapPinsContainer.querySelector(`.map__pin--active`).classList.remove(`map__pin--active`);
+  }
 };
 
 const setAddress = () => {
@@ -360,26 +369,30 @@ const onMainPinPressEnter = (evt) => {
   }
 };
 
-const activatePage = () => {
-  isPageActive = true;
-  map.classList.remove(`map--faded`);
-  adForm.classList.remove(`ad-form--disabled`);
+const activatePage = (evt) => {
+  if (evt.which === 1) {
+    isPageActive = true;
+    map.classList.remove(`map--faded`);
+    adForm.classList.remove(`ad-form--disabled`);
 
-  toggleFormElements(mapFiltersForm);
-  toggleFormElements(adForm);
-  setAddress();
-  placePins();
+    toggleFormElements(mapFiltersForm);
+    toggleFormElements(adForm);
+    setAddress();
+    placePins();
 
-  mainPin.removeEventListener(`mousedown`, activatePage);
-  mainPin.removeEventListener(`keydown`, onMainPinPressEnter);
-  mapPinsContainer.addEventListener(`click`, onPinClickPlaceCard);
+    mainPin.removeEventListener(`mousedown`, activatePage);
+    mainPin.removeEventListener(`keydown`, onMainPinPressEnter);
+    mapPinsContainer.addEventListener(`click`, onPinClick);
+  }
 };
 
 const deactivatePage = () => {
   isPageActive = false;
+
   if (!map.classList.contains(`map--faded`)) {
     map.classList.add(`map--faded`);
   }
+
   if (!adForm.classList.contains(`ad-form--disabled`)) {
     adForm.classList.add(`ad-form--disabled`);
   }
@@ -390,28 +403,27 @@ const deactivatePage = () => {
 
   mainPin.addEventListener(`mousedown`, activatePage);
   mainPin.addEventListener(`keydown`, onMainPinPressEnter);
-  mapPinsContainer.removeEventListener(`click`, onPinClickPlaceCard);
+  mapPinsContainer.removeEventListener(`click`, onPinClick);
 };
 
-const onPinClickPlaceCard = (evt) => {
+const onPinClick = (evt) => {
   const pinButton = evt.target.closest(`button[type="button"]`);
-  if (pinButton &&
-      !evt.target.classList.contains(`map__pin--main`) &&
-      !pinButton.classList.contains(`map__pin--active`)) {
+
+  if (pinButton && !evt.target.classList.contains(`map__pin--main`) && !pinButton.classList.contains(`map__pin--active`)) {
     const buttonId = parseInt(pinButton.dataset.id, 10);
-    const currentPinData = pins.find((item) => (item.offer.id === buttonId));
-    placeCard(currentPinData);
+    const currentCardData = pins.find((item) => (item.id === buttonId));
+
+    placeCard(currentCardData);
+
     pinButton.classList.add(`map__pin--active`);
   }
 };
 
 const onCardPressEsc = (evt) => {
-  const popupCard = map.querySelector(`.popup`);
-  if (popupCard && evt.key === `Escape`) {
-    const popupCardId = popupCard.dataset.id;
-    popupCard.remove();
-    mapPinsContainer.querySelector(`.map__pin[data-id="${popupCardId}"]`).classList.remove(`map__pin--active`);
+  if (evt.key === `Escape`) {
+    removeCard();
   }
+
   document.removeEventListener(`keydown`, onCardPressEsc);
 };
 
