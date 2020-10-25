@@ -6,7 +6,6 @@ const adForm = document.querySelector(`.ad-form`);
 const mapFiltersContainer = document.querySelector(`.map__filters-container`);
 const mainPin = document.querySelector(`.map__pin--main`);
 const mapPinsContainer = document.querySelector(`.map__pins`);
-let isPageActive = false;
 
 const placePins = () => {
   const pinFragment = document.createDocumentFragment();
@@ -35,7 +34,7 @@ const onMainPinPressEnter = (evt) => {
 
 const activatePage = (evt) => {
   if (evt.which === 1) {
-    isPageActive = true;
+    window.form.isPageActive = true;
     map.classList.remove(`map--faded`);
     adForm.classList.remove(`ad-form--disabled`);
 
@@ -51,7 +50,7 @@ const activatePage = (evt) => {
 };
 
 const deactivatePage = () => {
-  isPageActive = false;
+  window.form.isPageActive = false;
 
   if (!map.classList.contains(`map--faded`)) {
     map.classList.add(`map--faded`);
