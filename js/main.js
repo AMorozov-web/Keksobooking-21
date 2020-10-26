@@ -41,6 +41,7 @@ const activatePage = (evt) => {
     window.util.toggleFormElements(mapFiltersForm);
     window.util.toggleFormElements(adForm);
     window.form.setAddress();
+    window.form.activateForm();
     placePins();
 
     mainPin.removeEventListener(`mousedown`, activatePage);
@@ -63,6 +64,7 @@ const deactivatePage = () => {
   window.util.toggleFormElements(mapFiltersForm, true);
   window.util.toggleFormElements(adForm, true);
   window.form.setAddress();
+  window.form.deactivateForm();
 
   mainPin.addEventListener(`mousedown`, activatePage);
   mainPin.addEventListener(`keydown`, onMainPinPressEnter);
