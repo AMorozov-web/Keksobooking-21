@@ -93,7 +93,7 @@
     const rooms = roomNumberSelect.value;
     const guests = guestsNumberSelect.value;
 
-    if (rooms === `100` && guests !== `0`) {
+    if ((rooms === `100` && guests !== `0`) || (rooms !== `100` && guests === `0`)) {
       guestsNumberSelect.setCustomValidity(`Возможен только вариант: 100 комнат - не для гостей`);
     } else if (rooms !== `100` && rooms < guests) {
       guestsNumberSelect.setCustomValidity(`Количество комнат не может быть меньше числа гостей`);
