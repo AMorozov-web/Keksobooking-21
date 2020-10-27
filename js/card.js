@@ -6,20 +6,24 @@
     `комнаты`,
     `комнат`
   ];
+
   const GUESTS_DECLENSION = [
     `гостя`,
     `гостей`,
     `гостей`
   ];
+
+  const popupCardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
+  const map = document.querySelector(`.map`);
+  const mapPinsContainer = document.querySelector(`.map__pins`);
+  const mapFiltersContainer = document.querySelector(`.map__filters-container`);
+
   const typesMap = {
     'palace': `Дворец`,
     'flat': `Квартира`,
     'house': `Дом`,
     'bungalow': `Бунгало`
   };
-  const popupCardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
-  const map = document.querySelector(`.map`);
-  const mapPinsContainer = document.querySelector(`.map__pins`);
 
   const createFeatures = (featuresArr, parentElement) => {
     if (featuresArr.length === 0) {
@@ -131,8 +135,21 @@
     return popupCard;
   };
 
+  const onCardPressEsc = (evt) => {
+    window.util.checkPressEsc(evt, closeCard);
+
+    document.removeEventListener(`keydown`, onCardPressEsc);
+  };
+
+  const placeCard = (elem) => {
+    closeCard();
+
+    const card = createCard(elem);
+    map.insertBefore(card, mapFiltersContainer);
+    document.addEventListener(`keydown`, onCardPressEsc);
+  };
+
   window.card = {
-    createCard,
-    closeCard,
+    placeCard,
   };
 })();

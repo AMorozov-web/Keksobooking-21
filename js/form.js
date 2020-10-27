@@ -4,6 +4,8 @@
   const MAIN_PIN_OFFSET_X = 65;
   const MAIN_PIN_OFFSET_Y = 65;
   const MAIN_PIN_ACTIVE_OFFSET_Y = 84;
+  const map = document.querySelector(`.map`);
+  const mapFiltersForm = document.querySelector(`.map__filters`);
   const mainPin = document.querySelector(`.map__pin--main`);
   const mainPinTop = parseInt(mainPin.style.top, 10);
   const mainPinLeft = parseInt(mainPin.style.left, 10);
@@ -19,6 +21,20 @@
   const roomNumberSelect = adForm.querySelector(`#room_number`);
   const guestsNumberSelect = adForm.querySelector(`#capacity`);
 
+  const typeToMinPrice = {
+    palace: 10000,
+    house: 5000,
+    flat: 1000,
+    bungalow: 0,
+  };
+
+  const validityErrorMap = {
+    badInput: `Только числовое значение`,
+    rangeOverflow: `Максимальная цена - ${inputPrice.max}`,
+    rangeUnderflow: `Минимальная цена - ${inputPrice.min}`,
+    valueMissing: `Заполните это поле`,
+  };
+
   let isPageActive = false;
 
   const setAddress = () => {
@@ -31,7 +47,7 @@
     let valueLength = inputTitle.value.length;
 
     if (valueLength < titleMinLength) {
-      inputTitle.setCustomValidity(`Минимум 30 символов, ещё ${titleMinLength - valueLength}`);
+      inputTitle.setCustomValidity(`Минимум 30 символов, добавьте ещё ${titleMinLength - valueLength}`);
     } else if (valueLength > titleMaxLength) {
       inputTitle.setCustomValidity(`Максимум 100 символов, удалите лишние ${valueLength - titleMaxLength}`);
     } else {
@@ -40,24 +56,9 @@
     inputTitle.reportValidity();
   };
 
-  const getValidityErrorList = () => ({
-    badInput: `Только числовое значение`,
-    rangeOverflow: `Максимальная цена - ${inputPrice.max}`,
-    rangeUnderflow: `Минимальная цена - ${inputPrice.min}`,
-    valueMissing: `Заполните это поле`,
-  });
-
   const onPriceValidation = () => {
-    const errorList = getValidityErrorList();
-    const errorValue = Object.keys(errorList).find((value) => inputPrice.validity[value]);
-    inputPrice.setCustomValidity(errorValue ? errorList[errorValue] : ``);
-  };
-
-  const typeToMinPrice = {
-    palace: 10000,
-    house: 5000,
-    flat: 1000,
-    bungalow: 0,
+    const errorValue = Object.keys(validityErrorMap).find((value) => inputPrice.validity[value]);
+    inputPrice.setCustomValidity(errorValue ? validityErrorMap[errorValue] : ``);
   };
 
   const setMinPrice = (minPrice) => {
@@ -65,12 +66,8 @@
     inputPrice.setAttribute(`placeholder`, minPrice);
   };
 
-  let minPrice = typeToMinPrice[typeSelect.value];
-  setMinPrice(minPrice);
-
-  const onSelectChange = () => {
-    minPrice = typeToMinPrice[typeSelect.value];
-    setMinPrice(minPrice);
+  const onPriceSelectChange = () => {
+    setMinPrice(typeToMinPrice[typeSelect.value]);
   };
 
   const setCheckIn = (checkInTime) => {
@@ -103,30 +100,42 @@
     guestsNumberSelect.reportValidity();
   };
 
-  const activateForm = () => {
-    inputTitle.addEventListener(`change`, onTitleValidation);
-    inputPrice.addEventListener(`input`, onPriceValidation);
-    typeSelect.addEventListener(`change`, onSelectChange);
-    checkInSelect.addEventListener(`change`, onCheckInChange);
-    checkOutSelect.addEventListener(`change`, onCheckOutChange);
-    roomNumberSelect.addEventListener(`change`, onRoomsCapacityValidation);
-    guestsNumberSelect.addEventListener(`change`, onRoomsCapacityValidation);
+  const enableForm = () => {
+    map.classList.remove(`map--faded`);
+    adForm.classList.remove(`ad-form--disabled`);
+
+    window.util.toggleFormElements(mapFiltersForm);
+    window.util.toggleFormElements(adForm);
+    setAddress();
   };
 
-  const deactivateForm = () => {
-    inputTitle.removeEventListener(`change`, onTitleValidation);
-    inputPrice.removeEventListener(`input`, onPriceValidation);
-    typeSelect.removeEventListener(`change`, onSelectChange);
-    checkInSelect.removeEventListener(`change`, onCheckInChange);
-    checkOutSelect.removeEventListener(`change`, onCheckOutChange);
-    roomNumberSelect.removeEventListener(`change`, onRoomsCapacityValidation);
-    guestsNumberSelect.removeEventListener(`change`, onRoomsCapacityValidation);
+  const disableForm = () => {
+    if (!map.classList.contains(`map--faded`)) {
+      map.classList.add(`map--faded`);
+    }
+
+    if (!adForm.classList.contains(`ad-form--disabled`)) {
+      adForm.classList.add(`ad-form--disabled`);
+    }
+
+    window.util.toggleFormElements(mapFiltersForm, true);
+    window.util.toggleFormElements(adForm, true);
+    setAddress();
   };
+
+  setMinPrice(typeToMinPrice[typeSelect.value]);
+
+  inputTitle.addEventListener(`change`, onTitleValidation);
+  inputPrice.addEventListener(`change`, onPriceValidation);
+  typeSelect.addEventListener(`change`, onPriceSelectChange);
+  checkInSelect.addEventListener(`change`, onCheckInChange);
+  checkOutSelect.addEventListener(`change`, onCheckOutChange);
+  roomNumberSelect.addEventListener(`change`, onRoomsCapacityValidation);
+  guestsNumberSelect.addEventListener(`change`, onRoomsCapacityValidation);
 
   window.form = {
     isPageActive,
-    activateForm,
-    deactivateForm,
-    setAddress,
+    enableForm,
+    disableForm,
   };
 })();

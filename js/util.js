@@ -59,6 +59,18 @@
     return textWordsArr[2];
   };
 
+  const checkPressEnter = (evt, action) => {
+    if (evt.key === `Enter`) {
+      action();
+    }
+  };
+
+  const checkPressEsc = (evt, action) => {
+    if (evt.key === `Escape`) {
+      action();
+    }
+  };
+
   window.util = {
     toggleFormElements,
     shuffleArray,
@@ -66,5 +78,7 @@
     getRandomInRange,
     getRandomArr,
     declTextByNumber,
+    checkPressEnter,
+    checkPressEsc,
   };
 })();
