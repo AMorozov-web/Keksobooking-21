@@ -4,6 +4,7 @@
   const MAIN_PIN_OFFSET_X = 65;
   const MAIN_PIN_OFFSET_Y = 65;
   const MAIN_PIN_ACTIVE_OFFSET_Y = 84;
+
   const map = document.querySelector(`.map`);
   const mapFiltersForm = document.querySelector(`.map__filters`);
   const mainPin = document.querySelector(`.map__pin--main`);
@@ -70,20 +71,9 @@
     setMinPrice(typeToMinPrice[typeSelect.value]);
   };
 
-  const setCheckIn = (checkInTime) => {
-    checkInSelect.value = checkInTime;
-  };
-
-  const setCheckOut = (checkOutTime) => {
-    checkOutSelect.value = checkOutTime;
-  };
-
-  const onCheckInChange = () => {
-    setCheckOut(checkInSelect.value);
-  };
-
-  const onCheckOutChange = () => {
-    setCheckIn(checkOutSelect.value);
+  const onCheckInOutChange = (evt) => {
+    checkInSelect.value = evt.target.value;
+    checkOutSelect.value = evt.target.value;
   };
 
   const onRoomsCapacityValidation = () => {
@@ -124,12 +114,13 @@
   };
 
   setMinPrice(typeToMinPrice[typeSelect.value]);
+  onRoomsCapacityValidation();
 
   inputTitle.addEventListener(`change`, onTitleValidation);
   inputPrice.addEventListener(`change`, onPriceValidation);
   typeSelect.addEventListener(`change`, onPriceSelectChange);
-  checkInSelect.addEventListener(`change`, onCheckInChange);
-  checkOutSelect.addEventListener(`change`, onCheckOutChange);
+  checkInSelect.addEventListener(`change`, onCheckInOutChange);
+  checkOutSelect.addEventListener(`change`, onCheckInOutChange);
   roomNumberSelect.addEventListener(`change`, onRoomsCapacityValidation);
   guestsNumberSelect.addEventListener(`change`, onRoomsCapacityValidation);
 
