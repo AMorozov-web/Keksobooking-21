@@ -29,13 +29,6 @@
     bungalow: 0,
   };
 
-  const validityErrorMap = {
-    badInput: `Только числовое значение`,
-    rangeOverflow: `Максимальная цена - ${inputPrice.max}`,
-    rangeUnderflow: `Минимальная цена - ${inputPrice.min}`,
-    valueMissing: `Заполните это поле`,
-  };
-
   let isPageActive = false;
 
   const setAddress = () => {
@@ -57,7 +50,15 @@
     inputTitle.reportValidity();
   };
 
+  const getValidityErrorMap = () => ({
+    badInput: `Только числовое значение`,
+    rangeOverflow: `Максимальная цена - ${inputPrice.max}`,
+    rangeUnderflow: `Минимальная цена - ${inputPrice.min}`,
+    valueMissing: `Заполните это поле`,
+  });
+
   const onPriceValidation = () => {
+    const validityErrorMap = getValidityErrorMap();
     const errorValue = Object.keys(validityErrorMap).find((value) => inputPrice.validity[value]);
     inputPrice.setCustomValidity(errorValue ? validityErrorMap[errorValue] : ``);
   };
@@ -79,10 +80,12 @@
   const onRoomsCapacityValidation = () => {
     const rooms = roomNumberSelect.value;
     const guests = guestsNumberSelect.value;
+    const roomsMaxValue = `100`;
+    const guestsMinValue = `0`;
 
-    if ((rooms === `100` && guests !== `0`) || (rooms !== `100` && guests === `0`)) {
+    if ((rooms === roomsMaxValue && guests !== guestsMinValue) || (rooms !== roomsMaxValue && guests === guestsMinValue)) {
       guestsNumberSelect.setCustomValidity(`Возможен только вариант: 100 комнат - не для гостей`);
-    } else if (rooms !== `100` && rooms < guests) {
+    } else if (rooms !== roomsMaxValue && rooms < guests) {
       guestsNumberSelect.setCustomValidity(`Количество комнат не может быть меньше числа гостей`);
     } else {
       guestsNumberSelect.setCustomValidity(``);
@@ -114,6 +117,7 @@
   };
 
   setMinPrice(typeToMinPrice[typeSelect.value]);
+  onPriceValidation();
   onRoomsCapacityValidation();
 
   inputTitle.addEventListener(`change`, onTitleValidation);

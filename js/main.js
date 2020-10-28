@@ -21,7 +21,6 @@ const activatePage = () => {
 
   mainPin.removeEventListener(`keydown`, onMainPinPressEnter);
   mapPinsContainer.addEventListener(`click`, window.pin.onMapPinsClick);
-
 };
 
 const deactivatePage = () => {
