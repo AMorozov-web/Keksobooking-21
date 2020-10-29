@@ -8,45 +8,37 @@ const onMainPinPressEnter = (evt) => {
   window.util.checkPressEnter(evt, activatePage);
 };
 
+const onMainPinMouseDown = (evt) => {
+  if (evt.button === 0) {
+    activatePage();
+  }
+};
+
 const activatePage = () => {
-  window.form.isPageActive = true;
   map.classList.remove(`map--faded`);
 
   window.form.enableForm();
+  window.pin.placePins();
 
-  mainPin.removeEventListener(`mousedown`, (evt) => {
-    if (evt.button === 0) {
-      activatePage();
-    }
-  });
-
+  mainPin.removeEventListener(`mousedown`, onMainPinMouseDown);
   mainPin.removeEventListener(`keydown`, onMainPinPressEnter);
   mapPinsContainer.addEventListener(`click`, window.pin.onMapPinsClick);
+
+  window.form.isPageActive = true;
 };
 
 const deactivatePage = () => {
-  window.form.isPageActive = false;
-
   if (!map.classList.contains(`map--faded`)) {
     map.classList.add(`map--faded`);
   }
 
   window.form.disableForm();
 
-  mainPin.addEventListener(`mousedown`, (evt) => {
-    if (evt.button === 0) {
-      activatePage();
-    }
-  });
-
-  mainPin.addEventListener(`mousedown`, (evt) => {
-    if (evt.button === 0) {
-      window.move.onMainPinMove(evt);
-    }
-  });
-
+  mainPin.addEventListener(`mousedown`, onMainPinMouseDown);
   mainPin.addEventListener(`keydown`, onMainPinPressEnter);
   mapPinsContainer.removeEventListener(`click`, window.pin.onMapPinsClick);
+
+  window.form.isPageActive = false;
 };
 
 deactivatePage();
