@@ -5,7 +5,6 @@
   const MAIN_PIN_OFFSET_Y = 65;
   const MAIN_PIN_ACTIVE_OFFSET_Y = 84;
 
-  const map = document.querySelector(`.map`);
   const mapFiltersForm = document.querySelector(`.map__filters`);
   const mainPin = document.querySelector(`.map__pin--main`);
   const adForm = document.querySelector(`.ad-form`);
