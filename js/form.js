@@ -5,11 +5,8 @@
   const MAIN_PIN_OFFSET_Y = 65;
   const MAIN_PIN_ACTIVE_OFFSET_Y = 84;
 
-  const map = document.querySelector(`.map`);
   const mapFiltersForm = document.querySelector(`.map__filters`);
   const mainPin = document.querySelector(`.map__pin--main`);
-  const mainPinTop = parseInt(mainPin.style.top, 10);
-  const mainPinLeft = parseInt(mainPin.style.left, 10);
   const adForm = document.querySelector(`.ad-form`);
   const inputTitle = adForm.querySelector(`#title`);
   const titleMinLength = inputTitle.minLength;
@@ -29,18 +26,15 @@
     bungalow: 0,
   };
 
-  const validityErrorMap = {
-    badInput: `Только числовое значение`,
-    rangeOverflow: `Максимальная цена - ${inputPrice.max}`,
-    rangeUnderflow: `Минимальная цена - ${inputPrice.min}`,
-    valueMissing: `Заполните это поле`,
-  };
-
   let isPageActive = false;
 
   const setAddress = () => {
+    const mainPinTop = parseInt(mainPin.style.top, 10);
+    const mainPinLeft = parseInt(mainPin.style.left, 10);
+
     const x = Math.floor(mainPinLeft + MAIN_PIN_OFFSET_X / 2);
     const y = (window.form.isPageActive) ? mainPinTop + MAIN_PIN_ACTIVE_OFFSET_Y : Math.floor(mainPinTop + MAIN_PIN_OFFSET_Y / 2);
+
     inputAddress.value = `${x}, ${y}`;
   };
 
@@ -57,7 +51,15 @@
     inputTitle.reportValidity();
   };
 
+  const getValidityErrorMap = () => ({
+    badInput: `Только числовое значение`,
+    rangeOverflow: `Максимальная цена - ${inputPrice.max}`,
+    rangeUnderflow: `Минимальная цена - ${inputPrice.min}`,
+    valueMissing: `Заполните это поле`,
+  });
+
   const onPriceValidation = () => {
+    const validityErrorMap = getValidityErrorMap();
     const errorValue = Object.keys(validityErrorMap).find((value) => inputPrice.validity[value]);
     inputPrice.setCustomValidity(errorValue ? validityErrorMap[errorValue] : ``);
   };
@@ -79,10 +81,12 @@
   const onRoomsCapacityValidation = () => {
     const rooms = roomNumberSelect.value;
     const guests = guestsNumberSelect.value;
+    const roomsMaxValue = `100`;
+    const guestsMinValue = `0`;
 
-    if ((rooms === `100` && guests !== `0`) || (rooms !== `100` && guests === `0`)) {
+    if ((rooms === roomsMaxValue && guests !== guestsMinValue) || (rooms !== roomsMaxValue && guests === guestsMinValue)) {
       guestsNumberSelect.setCustomValidity(`Возможен только вариант: 100 комнат - не для гостей`);
-    } else if (rooms !== `100` && rooms < guests) {
+    } else if (rooms !== roomsMaxValue && rooms < guests) {
       guestsNumberSelect.setCustomValidity(`Количество комнат не может быть меньше числа гостей`);
     } else {
       guestsNumberSelect.setCustomValidity(``);
@@ -91,19 +95,13 @@
   };
 
   const enableForm = () => {
-    map.classList.remove(`map--faded`);
     adForm.classList.remove(`ad-form--disabled`);
 
     window.util.toggleFormElements(mapFiltersForm);
     window.util.toggleFormElements(adForm);
-    setAddress();
   };
 
   const disableForm = () => {
-    if (!map.classList.contains(`map--faded`)) {
-      map.classList.add(`map--faded`);
-    }
-
     if (!adForm.classList.contains(`ad-form--disabled`)) {
       adForm.classList.add(`ad-form--disabled`);
     }
@@ -114,6 +112,7 @@
   };
 
   setMinPrice(typeToMinPrice[typeSelect.value]);
+  onPriceValidation();
   onRoomsCapacityValidation();
 
   inputTitle.addEventListener(`change`, onTitleValidation);
@@ -125,8 +124,11 @@
   guestsNumberSelect.addEventListener(`change`, onRoomsCapacityValidation);
 
   window.form = {
+    MAIN_PIN_OFFSET_X,
+    MAIN_PIN_ACTIVE_OFFSET_Y,
     isPageActive,
     enableForm,
     disableForm,
+    setAddress,
   };
 })();
