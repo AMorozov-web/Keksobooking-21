@@ -8,8 +8,6 @@
   const map = document.querySelector(`.map`);
   const mapFiltersForm = document.querySelector(`.map__filters`);
   const mainPin = document.querySelector(`.map__pin--main`);
-  const mainPinTop = parseInt(mainPin.style.top, 10);
-  const mainPinLeft = parseInt(mainPin.style.left, 10);
   const adForm = document.querySelector(`.ad-form`);
   const inputTitle = adForm.querySelector(`#title`);
   const titleMinLength = inputTitle.minLength;
@@ -32,8 +30,12 @@
   let isPageActive = false;
 
   const setAddress = () => {
+    const mainPinTop = parseInt(mainPin.style.top, 10);
+    const mainPinLeft = parseInt(mainPin.style.left, 10);
+
     const x = Math.floor(mainPinLeft + MAIN_PIN_OFFSET_X / 2);
     const y = (window.form.isPageActive) ? mainPinTop + MAIN_PIN_ACTIVE_OFFSET_Y : Math.floor(mainPinTop + MAIN_PIN_OFFSET_Y / 2);
+
     inputAddress.value = `${x}, ${y}`;
   };
 
@@ -94,19 +96,13 @@
   };
 
   const enableForm = () => {
-    map.classList.remove(`map--faded`);
     adForm.classList.remove(`ad-form--disabled`);
 
     window.util.toggleFormElements(mapFiltersForm);
     window.util.toggleFormElements(adForm);
-    setAddress();
   };
 
   const disableForm = () => {
-    if (!map.classList.contains(`map--faded`)) {
-      map.classList.add(`map--faded`);
-    }
-
     if (!adForm.classList.contains(`ad-form--disabled`)) {
       adForm.classList.add(`ad-form--disabled`);
     }
@@ -129,8 +125,11 @@
   guestsNumberSelect.addEventListener(`change`, onRoomsCapacityValidation);
 
   window.form = {
+    MAIN_PIN_OFFSET_X,
+    MAIN_PIN_ACTIVE_OFFSET_Y,
     isPageActive,
     enableForm,
     disableForm,
+    setAddress,
   };
 })();
