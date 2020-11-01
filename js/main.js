@@ -14,11 +14,43 @@ const onMainPinMouseDown = (evt) => {
   }
 };
 
+const onErrorEscPress = (evt) => {
+  const error = document.querySelector(`.error`);
+
+  window.util.checkPressEsc(evt, error.remove());
+  document.removeEventListener(`keydown`, onErrorEscPress);
+};
+
+const onSuccess = (data) => {
+  window.data = window.util.setIdToElements(data);
+  window.pin.placePins(window.data);
+};
+
+const onError = (errorText) => {
+  const error = document.querySelector(`#error`).content.querySelector(`.error`);
+  const errorMessage = error.querySelector(`.error__message`);
+  const errorButton = error.querySelector(`.error__button`);
+
+  errorMessage.textContent = errorText;
+
+  document.body.insertAdjacentElement(`afterbegin`, error);
+
+  error.addEventListener(`click`, () => {
+    error.remove();
+  });
+
+  errorButton.addEventListener(`click`, () => {
+    error.remove();
+  });
+
+  document.addEventListener(`keydown`, onErrorEscPress);
+};
+
 const activatePage = () => {
   map.classList.remove(`map--faded`);
 
   window.form.enableForm();
-  window.pin.placePins();
+  window.backend.load(onSuccess, onError);
 
   mainPin.removeEventListener(`mousedown`, onMainPinMouseDown);
   mainPin.removeEventListener(`keydown`, onMainPinPressEnter);

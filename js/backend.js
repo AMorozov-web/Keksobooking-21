@@ -10,7 +10,7 @@
     OK: 200
   };
 
-  const getServerResponse = (url, httpMethod, onSuccess, onError, data) => {
+  const makeRequest = (url, httpMethod, onSuccess, onError, data) => {
     const xhr = new XMLHttpRequest();
     xhr.responseType = `json`;
     xhr.timeout = TIMEOUT_IN_MS;
@@ -35,16 +35,16 @@
     });
   };
 
-  const makeRequest = (onSuccess, onError) => {
-    getServerResponse(`${API_URL}/data`, GET, onSuccess, onError, null);
+  const load = (onSuccess, onError) => {
+    makeRequest(`${API_URL}/data`, GET, onSuccess, onError, null);
   };
 
   const upload = (data, onSuccess, onError) => {
-    getServerResponse(`${API_URL}`, POST, onSuccess, onError, data);
+    makeRequest(`${API_URL}`, POST, onSuccess, onError, data);
   };
 
   window.backend = {
-    makeRequest,
+    load,
     upload,
   };
 })();

@@ -21,11 +21,11 @@
     return mapPin;
   };
 
-  const placePins = () => {
+  const placePins = (data) => {
     const pinFragment = document.createDocumentFragment();
 
     for (let i = 0; i < MAX_PINS_COUNT; i++) {
-      const pin = window.data[i];
+      const pin = data[i];
       pinFragment.appendChild(createPin(pin));
     }
 
