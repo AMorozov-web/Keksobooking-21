@@ -1,6 +1,7 @@
 'use strict';
 
 (() => {
+  const MAX_PINS_COUNT = 5;
   const mapPinsContainer = document.querySelector(`.map__pins`);
   const mapPinTemplate = document.querySelector(`#pin`)
     .content.querySelector(`.map__pin`);
@@ -12,7 +13,7 @@
       return false;
     }
 
-    mapPin.style = `left: ${pin.offer.location.x}px; top: ${pin.offer.location.y}px;`;
+    mapPin.style = `left: ${pin.location.x}px; top: ${pin.location.y}px;`;
     mapPin.querySelector(`img`).src = pin.author.avatar;
     mapPin.querySelector(`img`).alt = pin.offer.title;
     mapPin.dataset.id = pin.id;
@@ -23,9 +24,10 @@
   const placePins = () => {
     const pinFragment = document.createDocumentFragment();
 
-    window.data.pins.forEach((elem) => {
-      pinFragment.appendChild(createPin(elem));
-    });
+    for (let i = 0; i < MAX_PINS_COUNT; i++) {
+      const pin = window.data[i];
+      pinFragment.appendChild(createPin(pin));
+    }
 
     mapPinsContainer.appendChild(pinFragment);
   };
@@ -35,7 +37,7 @@
 
     if (pinButton && !evt.target.classList.contains(`map__pin--main`) && !pinButton.classList.contains(`map__pin--active`)) {
       const buttonId = parseInt(pinButton.dataset.id, 10);
-      const currentCardData = window.data.pins.find((item) => (item.id === buttonId));
+      const currentCardData = window.data.find((item) => (item.id === buttonId));
 
       window.card.placeCard(currentCardData);
 
