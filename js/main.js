@@ -29,17 +29,12 @@ const onSuccess = (data) => {
 const onError = (errorText) => {
   const error = document.querySelector(`#error`).content.querySelector(`.error`);
   const errorMessage = error.querySelector(`.error__message`);
-  const errorButton = error.querySelector(`.error__button`);
 
   errorMessage.textContent = errorText;
 
   document.body.insertAdjacentElement(`afterbegin`, error);
 
   error.addEventListener(`click`, () => {
-    error.remove();
-  });
-
-  errorButton.addEventListener(`click`, () => {
     error.remove();
   });
 
