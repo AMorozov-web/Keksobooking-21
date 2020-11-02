@@ -3,6 +3,7 @@
 const map = document.querySelector(`.map`);
 const mainPin = document.querySelector(`.map__pin--main`);
 const mapPinsContainer = document.querySelector(`.map__pins`);
+const adForm = document.querySelector(`.ad-form`);
 
 const onMainPinPressEnter = (evt) => {
   window.util.checkPressEnter(evt, activatePage);
@@ -21,16 +22,39 @@ const onErrorEscPress = (evt) => {
   document.removeEventListener(`keydown`, onErrorEscPress);
 };
 
-const onSuccess = (data) => {
+const onSuccessEscPress = (evt) => {
+  const success = document.querySelector(`.success`);
+
+  window.util.checkPressEsc(evt, success.remove());
+  document.removeEventListener(`keydown`, onSuccessEscPress);
+};
+
+const onLoadSuccess = (data) => {
   window.data = window.util.setIdToElements(data);
   window.pin.placePins(window.data);
 };
 
+const onSubmitSuccess = () => {
+  const success = document.querySelector(`#success`).content.querySelector(`.success`).cloneNode(true);
+  document.body.insertAdjacentElement(`afterbegin`, success);
+
+  success.addEventListener(`click`, () => {
+    success.remove();
+  });
+
+  document.addEventListener(`keydown`, onSuccessEscPress);
+
+  adForm.reset();
+  deactivatePage();
+};
+
 const onError = (errorText) => {
-  const error = document.querySelector(`#error`).content.querySelector(`.error`);
+  const error = document.querySelector(`#error`).content.querySelector(`.error`).cloneNode(true);
   const errorMessage = error.querySelector(`.error__message`);
 
-  errorMessage.textContent = errorText;
+  if (errorText) {
+    errorMessage.textContent = errorText;
+  }
 
   document.body.insertAdjacentElement(`afterbegin`, error);
 
@@ -45,7 +69,7 @@ const activatePage = () => {
   map.classList.remove(`map--faded`);
 
   window.form.enableForm();
-  window.backend.load(onSuccess, onError);
+  window.backend.load(onLoadSuccess, onError);
 
   mainPin.removeEventListener(`mousedown`, onMainPinMouseDown);
   mainPin.removeEventListener(`keydown`, onMainPinPressEnter);
@@ -60,6 +84,7 @@ const deactivatePage = () => {
   }
 
   window.form.disableForm();
+  window.pin.removePins();
 
   mainPin.addEventListener(`mousedown`, onMainPinMouseDown);
   mainPin.addEventListener(`keydown`, onMainPinPressEnter);
@@ -67,5 +92,12 @@ const deactivatePage = () => {
 
   window.form.isPageActive = false;
 };
+
+adForm.addEventListener(`submit`, (evt) => {
+  const data = new FormData(adForm);
+
+  window.backend.upload(data, onSubmitSuccess, onError);
+  evt.preventDefault();
+});
 
 deactivatePage();
