@@ -71,6 +71,12 @@
     }
   };
 
+  const setIdToElements = (Arr) => {
+    const newArr = Arr.map((elem, index) => Object.assign({id: index}, elem));
+
+    return newArr;
+  };
+
   window.util = {
     toggleFormElements,
     shuffleArray,
@@ -80,5 +86,6 @@
     declTextByNumber,
     checkPressEnter,
     checkPressEsc,
+    setIdToElements,
   };
 })();
