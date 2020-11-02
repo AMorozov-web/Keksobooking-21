@@ -45,8 +45,17 @@
     }
   };
 
+  const removePins = () => {
+    const pins = mapPinsContainer.querySelectorAll(`.map__pin:not(.map__pin--main)`);
+
+    pins.forEach((pin) => {
+      pin.remove();
+    });
+  };
+
   window.pin = {
     placePins,
     onMapPinsClick,
+    removePins,
   };
 })();
