@@ -1,6 +1,7 @@
 'use strict';
 
 (() => {
+  const MAX_PINS_COUNT = 5;
   const FILTER_ANY_VALUE = `any`;
   const filterType = document.querySelector(`#housing-type`);
 
@@ -14,7 +15,8 @@
       }
     });
 
+
     window.card.closeCard();
-    window.pin.updatePins(selectedPinsData);
+    window.pin.updatePins(selectedPinsData.slice(0, MAX_PINS_COUNT));
   });
 })();
