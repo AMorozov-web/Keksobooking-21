@@ -52,6 +52,7 @@
   };
 
   const updatePins = (data) => {
+    window.card.closeCard();
     removePins();
     placePins(data);
   };
