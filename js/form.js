@@ -97,7 +97,6 @@
   const enableForm = () => {
     adForm.classList.remove(`ad-form--disabled`);
 
-    window.util.toggleFormElements(mapFiltersForm);
     window.util.toggleFormElements(adForm);
   };
 
@@ -106,9 +105,16 @@
       adForm.classList.add(`ad-form--disabled`);
     }
 
-    window.util.toggleFormElements(mapFiltersForm, true);
     window.util.toggleFormElements(adForm, true);
     setAddress();
+  };
+
+  const enableFilters = () => {
+    window.util.toggleFormElements(mapFiltersForm);
+  };
+
+  const disableFilters = () => {
+    window.util.toggleFormElements(mapFiltersForm, true);
   };
 
   setMinPrice(typeToMinPrice[typeSelect.value]);
@@ -129,6 +135,8 @@
     isPageActive,
     enableForm,
     disableForm,
+    enableFilters,
+    disableFilters,
     setAddress,
   };
 })();
