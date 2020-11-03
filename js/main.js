@@ -1,5 +1,6 @@
 'use strict';
 
+const MAX_PINS_COUNT = 5;
 const map = document.querySelector(`.map`);
 const mainPin = document.querySelector(`.map__pin--main`);
 const mapPinsContainer = document.querySelector(`.map__pins`);
@@ -17,13 +18,14 @@ const onMainPinMouseDown = (evt) => {
 
 const onLoadSuccess = (data) => {
   window.data = window.util.setIdToElements(data);
+  const randomPins = window.data.slice(0, MAX_PINS_COUNT);
+
   window.form.enableFilters();
-  window.pin.placePins(window.data);
+  window.pin.placePins(randomPins);
 };
 
 const onSubmitSuccess = () => {
   window.message.renderSuccessMessage();
-
   adForm.reset();
   deactivatePage();
 };

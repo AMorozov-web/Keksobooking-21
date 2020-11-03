@@ -1,17 +1,16 @@
 'use strict';
 
 (() => {
-  const MAX_PINS_COUNT = 5;
   const mapPinsContainer = document.querySelector(`.map__pins`);
   const mapPinTemplate = document.querySelector(`#pin`)
     .content.querySelector(`.map__pin`);
 
   const createPin = (pin) => {
-    const mapPin = mapPinTemplate.cloneNode(true);
-
     if (!pin.offer) {
-      return false;
+      return null;
     }
+
+    const mapPin = mapPinTemplate.cloneNode(true);
 
     mapPin.style = `left: ${pin.location.x}px; top: ${pin.location.y}px;`;
     mapPin.querySelector(`img`).src = pin.author.avatar;
@@ -24,10 +23,9 @@
   const placePins = (data) => {
     const pinFragment = document.createDocumentFragment();
 
-    for (let i = 0; i < MAX_PINS_COUNT; i++) {
-      const pin = data[i];
-      pinFragment.appendChild(createPin(pin));
-    }
+    data.forEach((elem) => {
+      pinFragment.appendChild(createPin(elem));
+    });
 
     mapPinsContainer.appendChild(pinFragment);
   };
@@ -53,9 +51,15 @@
     });
   };
 
+  const updatePins = (data) => {
+    removePins();
+    placePins(data);
+  };
+
   window.pin = {
     placePins,
     onMapPinsClick,
     removePins,
+    updatePins,
   };
 })();
