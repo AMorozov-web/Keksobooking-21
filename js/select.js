@@ -15,7 +15,6 @@
       }
     });
 
-
     window.card.closeCard();
     window.pin.updatePins(selectedPinsData.slice(0, MAX_PINS_COUNT));
   });
