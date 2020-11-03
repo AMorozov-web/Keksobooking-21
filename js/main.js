@@ -17,6 +17,7 @@ const onMainPinMouseDown = (evt) => {
 
 const onLoadSuccess = (data) => {
   window.data = window.util.setIdToElements(data);
+  window.form.enableFilters();
   window.pin.placePins(window.data);
 };
 
@@ -50,6 +51,7 @@ const deactivatePage = () => {
   }
 
   window.form.disableForm();
+  window.form.disableFilters();
   window.pin.removePins();
 
   mainPin.addEventListener(`mousedown`, onMainPinMouseDown);
