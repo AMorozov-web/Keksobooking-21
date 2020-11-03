@@ -15,54 +15,20 @@ const onMainPinMouseDown = (evt) => {
   }
 };
 
-const onErrorEscPress = (evt) => {
-  const error = document.querySelector(`.error`);
-
-  window.util.checkPressEsc(evt, error.remove());
-  document.removeEventListener(`keydown`, onErrorEscPress);
-};
-
-const onSuccessEscPress = (evt) => {
-  const success = document.querySelector(`.success`);
-
-  window.util.checkPressEsc(evt, success.remove());
-  document.removeEventListener(`keydown`, onSuccessEscPress);
-};
-
 const onLoadSuccess = (data) => {
   window.data = window.util.setIdToElements(data);
   window.pin.placePins(window.data);
 };
 
 const onSubmitSuccess = () => {
-  const success = document.querySelector(`#success`).content.querySelector(`.success`).cloneNode(true);
-  document.body.insertAdjacentElement(`afterbegin`, success);
-
-  success.addEventListener(`click`, () => {
-    success.remove();
-  });
-
-  document.addEventListener(`keydown`, onSuccessEscPress);
+  window.message.renderSuccessMessage();
 
   adForm.reset();
   deactivatePage();
 };
 
 const onError = (errorText) => {
-  const error = document.querySelector(`#error`).content.querySelector(`.error`).cloneNode(true);
-  const errorMessage = error.querySelector(`.error__message`);
-
-  if (errorText) {
-    errorMessage.textContent = errorText;
-  }
-
-  document.body.insertAdjacentElement(`afterbegin`, error);
-
-  error.addEventListener(`click`, () => {
-    error.remove();
-  });
-
-  document.addEventListener(`keydown`, onErrorEscPress);
+  window.message.renderErrorMessage(errorText);
 };
 
 const activatePage = () => {
