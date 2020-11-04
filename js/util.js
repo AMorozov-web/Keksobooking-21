@@ -3,7 +3,7 @@
 (() => {
   const DEBOUNCE_INTERVAL = 500;
 
-  const debounceFunction = (callback) => {
+  const debounceFunction = (callback, ms = DEBOUNCE_INTERVAL) => {
     let lastTimeout = null;
 
     return (...parameters) => {
@@ -13,7 +13,7 @@
 
       lastTimeout = window.setTimeout(() => {
         callback(...parameters);
-      }, DEBOUNCE_INTERVAL);
+      }, ms);
     };
   };
 
