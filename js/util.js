@@ -87,10 +87,8 @@
     }
   };
 
-  const setIdToElements = (Arr) => {
-    const newArr = Arr.map((elem, index) => Object.assign({id: index}, elem));
-
-    return newArr;
+  const setIdToElements = (arr) => {
+    return arr.map((elem, index) => Object.assign({id: index}, elem));
   };
 
   window.util = {
