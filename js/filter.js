@@ -30,23 +30,12 @@
 
     switch (priceFilter.value) {
       case PriceFilterValues.LOW:
-        if (ad.offer.price < PriceFilterPrices.MIN) {
-          matches = true;
-        }
-        break;
+        return ad.offer.price < PriceFilterPrices.MIN;
       case PriceFilterValues.MIDDLE:
-        if (ad.offer.price >= PriceFilterPrices.MIN && ad.offer.price < PriceFilterPrices.MAX) {
-          matches = true;
-        }
-        break;
+        return ad.offer.price >= PriceFilterPrices.MIN && ad.offer.price < PriceFilterPrices.MAX;
       case PriceFilterValues.HIGH:
-        if (ad.offer.price >= PriceFilterPrices.MAX) {
-          matches = true;
-        }
-        break;
-      case FILTER_ANY_VALUE:
-        matches = true;
-        break;
+        return ad.offer.price >= PriceFilterPrices.MAX;
+      case FILTER_ANY_VALUE: return true;
       default: break;
     }
 
