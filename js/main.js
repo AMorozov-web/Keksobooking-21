@@ -48,14 +48,14 @@ const onError = (errorText) => {
 const activatePage = () => {
   map.classList.remove(`map--faded`);
 
+  window.form.isPageActive = true;
+
   window.form.enableForm();
   window.backend.load(onLoadSuccess, onError);
 
   mainPin.removeEventListener(`mousedown`, onMainPinMouseDown);
   mainPin.removeEventListener(`keydown`, onMainPinPressEnter);
   mapPinsContainer.addEventListener(`click`, window.pin.onMapPinsClick);
-
-  window.form.isPageActive = true;
 };
 
 const deactivatePage = () => {
@@ -63,17 +63,17 @@ const deactivatePage = () => {
     map.classList.add(`map--faded`);
   }
 
+  window.form.isPageActive = false;
+
+  setMainPinDefault();
   window.form.disableForm();
   window.form.disableFilters();
   window.card.closeCard();
   window.pin.removePins();
-  setMainPinDefault();
 
   mainPin.addEventListener(`mousedown`, onMainPinMouseDown);
   mainPin.addEventListener(`keydown`, onMainPinPressEnter);
   mapPinsContainer.removeEventListener(`click`, window.pin.onMapPinsClick);
-
-  window.form.isPageActive = false;
 };
 
 adFormResetButton.addEventListener(`mousedown`, () => {
