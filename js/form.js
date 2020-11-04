@@ -18,6 +18,10 @@
   const checkOutSelect = adForm.querySelector(`#timeout`);
   const roomNumberSelect = adForm.querySelector(`#room_number`);
   const guestsNumberSelect = adForm.querySelector(`#capacity`);
+  const inputAvatar = adForm.querySelector(`#avatar`);
+  const previewAvatar = adForm.querySelector(`.ad-form-header__preview img`);
+  const inputImages = adForm.querySelector(`#images`);
+  const previewImages = adForm.querySelector(`.ad-form__photo`);
 
   const typeToMinPrice = {
     palace: 10000,
@@ -94,6 +98,14 @@
     guestsNumberSelect.reportValidity();
   };
 
+  const onInputSetAvatar = () => {
+    window.image.setImagePreview(inputAvatar, previewAvatar);
+  };
+
+  const onInputSetImages = () => {
+    window.image.setImagePreview(inputImages, previewImages);
+  };
+
   const enableForm = () => {
     adForm.classList.remove(`ad-form--disabled`);
 
@@ -105,6 +117,8 @@
       adForm.classList.add(`ad-form--disabled`);
     }
 
+    window.image.removeImagePreview(previewAvatar);
+    window.image.removeImagePreview(previewImages);
     window.util.toggleFormElements(adForm, true);
     setAddress();
   };
@@ -128,6 +142,8 @@
   checkOutSelect.addEventListener(`change`, onCheckInOutChange);
   roomNumberSelect.addEventListener(`change`, onRoomsCapacityValidation);
   guestsNumberSelect.addEventListener(`change`, onRoomsCapacityValidation);
+  inputAvatar.addEventListener(`change`, onInputSetAvatar);
+  inputImages.addEventListener(`change`, onInputSetImages);
 
   window.form = {
     MAIN_PIN_OFFSET_X,

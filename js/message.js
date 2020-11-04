@@ -19,7 +19,9 @@
 
   const renderSuccessMessage = () => {
     const success = document.querySelector(`#success`).content.querySelector(`.success`).cloneNode(true);
-    document.body.insertAdjacentElement(`afterbegin`, success);
+    const main = document.querySelector(`main`);
+
+    main.insertAdjacentElement(`afterbegin`, success);
 
     success.addEventListener(`click`, () => {
       success.remove();
@@ -30,13 +32,14 @@
 
   const renderErrorMessage = (errorText) => {
     const error = document.querySelector(`#error`).content.querySelector(`.error`).cloneNode(true);
+    const main = document.querySelector(`main`);
     const errorMessage = error.querySelector(`.error__message`);
 
     if (errorText) {
       errorMessage.textContent = errorText;
     }
 
-    document.body.insertAdjacentElement(`afterbegin`, error);
+    main.insertAdjacentElement(`afterbegin`, error);
 
     error.addEventListener(`click`, () => {
       error.remove();

@@ -51,10 +51,11 @@
     });
   };
 
-  const updatePins = (data) => {
+  const updatePins = window.debounce((data) => {
+    window.card.closeCard();
     removePins();
     placePins(data);
-  };
+  });
 
   window.pin = {
     placePins,
