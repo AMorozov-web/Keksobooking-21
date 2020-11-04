@@ -1,106 +1,104 @@
 'use strict';
 
-(() => {
-  const DEBOUNCE_INTERVAL = 500;
+const DEBOUNCE_INTERVAL = 500;
 
-  const debounceFunction = (callback, ms = DEBOUNCE_INTERVAL) => {
-    let lastTimeout = null;
+const debounceFunction = (callback, ms = DEBOUNCE_INTERVAL) => {
+  let lastTimeout = null;
 
-    return (...parameters) => {
-      if (lastTimeout) {
-        window.clearTimeout(lastTimeout);
-      }
-
-      lastTimeout = window.setTimeout(() => {
-        callback(...parameters);
-      }, ms);
-    };
-  };
-
-  const toggleFormElements = (parentElem, state = false) => {
-    for (let elem of parentElem.children) {
-      elem.disabled = state;
-    }
-  };
-
-  const shuffleArray = (arr) => {
-    const newArr = arr.slice();
-
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+  return (...parameters) => {
+    if (lastTimeout) {
+      window.clearTimeout(lastTimeout);
     }
 
-    return newArr;
+    lastTimeout = window.setTimeout(() => {
+      callback(...parameters);
+    }, ms);
   };
+};
 
-  const getRandomElement = (arr) => {
-    return arr[Math.floor(Math.random() * arr.length)];
-  };
+const toggleFormElements = (parentElem, state = false) => {
+  for (let elem of parentElem.children) {
+    elem.disabled = state;
+  }
+};
 
-  const getRandomInRange = (min, max) => {
-    return Math.floor(min + Math.random() * (max + 1 - min));
-  };
+const shuffleArray = (arr) => {
+  const newArr = arr.slice();
 
-  const getRandomArr = (arr) => {
-    const selectedElements = [];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+  }
 
-    if (arr.length !== 0) {
-      const randomElementsCount = getRandomInRange(1, arr.length);
-      const allElements = shuffleArray(arr);
+  return newArr;
+};
 
-      for (let i = 0; i < randomElementsCount; i++) {
-        selectedElements.push(allElements[i]);
-      }
+const getRandomElement = (arr) => {
+  return arr[Math.floor(Math.random() * arr.length)];
+};
+
+const getRandomInRange = (min, max) => {
+  return Math.floor(min + Math.random() * (max + 1 - min));
+};
+
+const getRandomArr = (arr) => {
+  const selectedElements = [];
+
+  if (arr.length !== 0) {
+    const randomElementsCount = getRandomInRange(1, arr.length);
+    const allElements = shuffleArray(arr);
+
+    for (let i = 0; i < randomElementsCount; i++) {
+      selectedElements.push(allElements[i]);
     }
+  }
 
-    return selectedElements;
-  };
+  return selectedElements;
+};
 
-  const declTextByNumber = (number, textWordsArr) => {
-    const a = Math.abs(number) % 100;
-    const b = number % 10;
+const declTextByNumber = (number, textWordsArr) => {
+  const a = Math.abs(number) % 100;
+  const b = number % 10;
 
-    if (a > 10 && a < 20) {
-      return textWordsArr[2];
-    }
-
-    if (b > 1 && b < 5) {
-      return textWordsArr[1];
-    }
-
-    if (b === 1) {
-      return textWordsArr[0];
-    }
+  if (a > 10 && a < 20) {
     return textWordsArr[2];
-  };
+  }
 
-  const checkPressEnter = (evt, action) => {
-    if (evt.key === `Enter`) {
-      action();
-    }
-  };
+  if (b > 1 && b < 5) {
+    return textWordsArr[1];
+  }
 
-  const checkPressEsc = (evt, action) => {
-    if (evt.key === `Escape`) {
-      action();
-    }
-  };
+  if (b === 1) {
+    return textWordsArr[0];
+  }
+  return textWordsArr[2];
+};
 
-  const setIdToElements = (arr) => {
-    return arr.map((elem, index) => Object.assign({id: index}, elem));
-  };
+const checkPressEnter = (evt, action) => {
+  if (evt.key === `Enter`) {
+    action();
+  }
+};
 
-  window.util = {
-    toggleFormElements,
-    shuffleArray,
-    getRandomElement,
-    getRandomInRange,
-    getRandomArr,
-    declTextByNumber,
-    checkPressEnter,
-    checkPressEsc,
-    setIdToElements,
-    debounceFunction,
-  };
-})();
+const checkPressEsc = (evt, action) => {
+  if (evt.key === `Escape`) {
+    action();
+  }
+};
+
+const setIdToElements = (arr) => {
+  return arr.map((elem, index) => Object.assign({id: index}, elem));
+};
+
+window.util = {
+  toggleFormElements,
+  shuffleArray,
+  getRandomElement,
+  getRandomInRange,
+  getRandomArr,
+  declTextByNumber,
+  checkPressEnter,
+  checkPressEsc,
+  setIdToElements,
+  debounceFunction,
+};
