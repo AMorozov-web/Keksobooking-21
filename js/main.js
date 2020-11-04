@@ -1,10 +1,16 @@
 'use strict';
 
 const MAX_PINS_COUNT = 5;
+const MAIN_PIN_DEFAULT_COORDS = {
+  top: 375,
+  left: 570,
+};
+
 const map = document.querySelector(`.map`);
 const mainPin = document.querySelector(`.map__pin--main`);
 const mapPinsContainer = document.querySelector(`.map__pins`);
 const adForm = document.querySelector(`.ad-form`);
+const adFormResetButton = adForm.querySelector(`.ad-form__reset`);
 
 const onMainPinPressEnter = (evt) => {
   window.util.checkPressEnter(evt, activatePage);
@@ -14,6 +20,11 @@ const onMainPinMouseDown = (evt) => {
   if (evt.button === 0) {
     activatePage();
   }
+};
+
+const setMainPinDefault = () => {
+  mainPin.style.top = `${MAIN_PIN_DEFAULT_COORDS.top}px`;
+  mainPin.style.left = `${MAIN_PIN_DEFAULT_COORDS.left}px`;
 };
 
 const onLoadSuccess = (data) => {
@@ -56,6 +67,7 @@ const deactivatePage = () => {
   window.form.disableFilters();
   window.card.closeCard();
   window.pin.removePins();
+  setMainPinDefault();
 
   mainPin.addEventListener(`mousedown`, onMainPinMouseDown);
   mainPin.addEventListener(`keydown`, onMainPinPressEnter);
@@ -63,6 +75,10 @@ const deactivatePage = () => {
 
   window.form.isPageActive = false;
 };
+
+adFormResetButton.addEventListener(`mousedown`, () => {
+  deactivatePage();
+});
 
 adForm.addEventListener(`submit`, (evt) => {
   const data = new FormData(adForm);
