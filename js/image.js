@@ -17,12 +17,8 @@
 
       reader.addEventListener(`load`, () => {
         if (preview.tagName.toLowerCase() !== `img`) {
-          const newImg = document.createElement(`img`);
-          newImg.style.width = getComputedStyle(preview).width;
-          newImg.style.height = getComputedStyle(preview).height;
-          newImg.alt = `Фотография жилья`;
-          newImg.src = reader.result;
-          preview.appendChild(newImg);
+          preview.style.backgroundSize = `contain`;
+          preview.style.backgroundImage = `url(${reader.result})`;
         } else {
           preview.src = reader.result;
         }
@@ -34,7 +30,7 @@
 
   const removeImagePreview = (preview) => {
     if (preview.tagName.toLowerCase() !== `img`) {
-      preview.innerHTML = ``;
+      preview.style.backgroundImage = ``;
     } else {
       preview.src = DEFAULT_IMG_SRC;
     }
