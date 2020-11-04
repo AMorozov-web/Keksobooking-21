@@ -89,4 +89,5 @@
 
   filtersContainer.addEventListener(`change`, onFiltersChange);
 
+  window.filter = getFilteredData;
 })();

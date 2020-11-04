@@ -51,7 +51,7 @@
     });
   };
 
-  const updatePins = window.debounce((data) => {
+  const updatePins = window.util.debounceFunction((data) => {
     window.card.closeCard();
     removePins();
     placePins(data);
