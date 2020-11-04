@@ -30,15 +30,31 @@
   };
 
   const filterByPrice = (ad) => {
-    if ((priceFilter.value === PriceFilterValues.LOW && ad.offer.price < PriceFilterPrices.MIN)
-      || (priceFilter.value === PriceFilterValues.MIDDLE && ad.offer.price >= PriceFilterPrices.MIN
-        && ad.offer.price < PriceFilterPrices.MAX)
-      || (priceFilter.value === PriceFilterValues.HIGH && ad.offer.price >= PriceFilterPrices.MAX)
-      || priceFilter.value === FILTER_ANY_VALUE) {
-      return true;
+    let matches = false;
+
+    switch (priceFilter.value) {
+      case PriceFilterValues.LOW:
+        if (ad.offer.price < PriceFilterPrices.MIN) {
+          matches = true;
+        }
+        break;
+      case PriceFilterValues.MIDDLE:
+        if (ad.offer.price >= PriceFilterPrices.MIN && ad.offer.price < PriceFilterPrices.MAX) {
+          matches = true;
+        }
+        break;
+      case PriceFilterValues.HIGH:
+        if (ad.offer.price >= PriceFilterPrices.MAX) {
+          matches = true;
+        }
+        break;
+      case FILTER_ANY_VALUE:
+        matches = true;
+        break;
+      default: break;
     }
 
-    return false;
+    return matches;
   };
 
   const filterByRoomsCount = (ad) => {
