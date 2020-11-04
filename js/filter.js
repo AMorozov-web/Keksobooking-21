@@ -26,8 +26,6 @@
   };
 
   const filterByPrice = (ad) => {
-    let matches = false;
-
     switch (priceFilter.value) {
       case PriceFilterValues.LOW:
         return ad.offer.price < PriceFilterPrices.MIN;
@@ -36,10 +34,8 @@
       case PriceFilterValues.HIGH:
         return ad.offer.price >= PriceFilterPrices.MAX;
       case FILTER_ANY_VALUE: return true;
-      default: break;
+      default: return false;
     }
-
-    return matches;
   };
 
   const filterByRoomsCount = (ad) => {
