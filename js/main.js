@@ -54,6 +54,7 @@ const deactivatePage = () => {
 
   window.form.disableForm();
   window.form.disableFilters();
+  window.card.closeCard();
   window.pin.removePins();
 
   mainPin.addEventListener(`mousedown`, onMainPinMouseDown);
