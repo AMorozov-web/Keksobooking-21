@@ -19,4 +19,10 @@ module.exports = {
     iife: true,
   },
   devtool: false,
+  devServer: {
+    port: 3000,
+    historyApiFallback: {
+      index: 'index.html'
+    }
+  },
 };

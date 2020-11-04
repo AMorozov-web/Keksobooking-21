@@ -21,7 +21,7 @@
   "dependencies": {},
   "scripts": {
     "build": "webpack --mode production",
-    "start": "webpack-dev-server",
+    "start": "webpack serve",
     "test": "eslint js/"
   },
   "engines": {
