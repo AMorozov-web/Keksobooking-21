@@ -2,6 +2,7 @@
 
 (() => {
   const IMAGE_FILE_TYPES = [`gif`, `jpg`, `jpeg`, `png`];
+  const DEFAULT_IMG_SRC = `img/muffin-grey.svg`;
 
   const setImagePreview = (fileInput, preview) => {
     const file = fileInput.files[0];
@@ -19,7 +20,7 @@
           const newImg = document.createElement(`img`);
           newImg.style.width = getComputedStyle(preview).width;
           newImg.style.height = getComputedStyle(preview).height;
-          newImg.style.alt = `Фотография жилья`;
+          newImg.alt = `Фотография жилья`;
           newImg.src = reader.result;
           preview.appendChild(newImg);
         } else {
@@ -31,5 +32,16 @@
     }
   };
 
-  window.setPreview = setImagePreview;
+  const removeImagePreview = (preview) => {
+    if (preview.tagName.toLowerCase() !== `img`) {
+      preview.innerHTML = ``;
+    } else {
+      preview.src = DEFAULT_IMG_SRC;
+    }
+  };
+
+  window.image = {
+    setImagePreview,
+    removeImagePreview,
+  };
 })();

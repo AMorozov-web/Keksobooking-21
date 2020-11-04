@@ -99,11 +99,11 @@
   };
 
   const onInputSetAvatar = () => {
-    window.setPreview(inputAvatar, previewAvatar);
+    window.image.setImagePreview(inputAvatar, previewAvatar);
   };
 
   const onInputSetImages = () => {
-    window.setPreview(inputImages, previewImages);
+    window.image.setImagePreview(inputImages, previewImages);
   };
 
   const enableForm = () => {
@@ -117,6 +117,8 @@
       adForm.classList.add(`ad-form--disabled`);
     }
 
+    window.image.removeImagePreview(previewAvatar);
+    window.image.removeImagePreview(previewImages);
     window.util.toggleFormElements(adForm, true);
     setAddress();
   };
