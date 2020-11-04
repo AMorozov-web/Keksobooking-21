@@ -22,11 +22,7 @@
   };
 
   const filterByType = (ad) => {
-    if (ad.offer.type === typeFilter.value || typeFilter.value === FILTER_ANY_VALUE) {
-      return true;
-    }
-
-    return false;
+    return ad.offer.type === typeFilter.value || typeFilter.value === FILTER_ANY_VALUE;
   };
 
   const filterByPrice = (ad) => {
@@ -58,26 +54,17 @@
   };
 
   const filterByRoomsCount = (ad) => {
-    if (ad.offer.rooms === +roomsCountFilter.value || roomsCountFilter.value === FILTER_ANY_VALUE) {
-      return true;
-    }
-
-    return false;
+    return ad.offer.rooms === +roomsCountFilter.value || roomsCountFilter.value === FILTER_ANY_VALUE;
   };
 
   const filterByGuestsCount = (ad) => {
-    if (ad.offer.guests >= +guestsCountFilter.value || guestsCountFilter.value === FILTER_ANY_VALUE) {
-      return true;
-    }
-
-    return false;
+    return ad.offer.guests >= +guestsCountFilter.value || guestsCountFilter.value === FILTER_ANY_VALUE;
   };
 
   const filterByFeatures = (ad) => {
     const selectedFeatures = Array.from(featuresFilter.querySelectorAll(`input:checked`));
-    const adFeatures = ad.offer.features;
 
-    return selectedFeatures.every((feature) => adFeatures.includes(feature.value));
+    return selectedFeatures.every((feature) => ad.offer.features.includes(feature.value));
   };
 
   const getFilteredData = (data) => {
