@@ -33,8 +33,10 @@
         return ad.offer.price >= PriceFilterPrices.MIN && ad.offer.price < PriceFilterPrices.MAX;
       case PriceFilterValues.HIGH:
         return ad.offer.price >= PriceFilterPrices.MAX;
-      case FILTER_ANY_VALUE: return true;
-      default: return false;
+      case FILTER_ANY_VALUE:
+        return true;
+      default:
+        return false;
     }
   };
 
