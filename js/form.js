@@ -9,8 +9,6 @@
   const mainPin = document.querySelector(`.map__pin--main`);
   const adForm = document.querySelector(`.ad-form`);
   const inputTitle = adForm.querySelector(`#title`);
-  const titleMinLength = inputTitle.minLength;
-  const titleMaxLength = inputTitle.maxLength;
   const inputAddress = adForm.querySelector(`#address`);
   const inputPrice = adForm.querySelector(`#price`);
   const typeSelect = adForm.querySelector(`#type`);
@@ -22,6 +20,8 @@
   const previewAvatar = adForm.querySelector(`.ad-form-header__preview img`);
   const inputImages = adForm.querySelector(`#images`);
   const previewImages = adForm.querySelector(`.ad-form__photo`);
+  const titleMinLength = inputTitle.minLength;
+  const titleMaxLength = inputTitle.maxLength;
 
   const typeToMinPrice = {
     palace: 10000,
@@ -31,6 +31,13 @@
   };
 
   let isPageActive = false;
+
+  const getValidityErrorMap = () => ({
+    badInput: `Только числовое значение`,
+    rangeOverflow: `Максимальная цена - ${inputPrice.max}`,
+    rangeUnderflow: `Минимальная цена - ${inputPrice.min}`,
+    valueMissing: `Заполните это поле`,
+  });
 
   const setAddress = () => {
     const mainPinTop = parseInt(mainPin.style.top, 10);
@@ -46,21 +53,14 @@
     let valueLength = inputTitle.value.length;
 
     if (valueLength < titleMinLength) {
-      inputTitle.setCustomValidity(`Минимум 30 символов, добавьте ещё ${titleMinLength - valueLength}`);
+      inputTitle.setCustomValidity(`Минимум ${titleMinLength} символов, добавьте ещё ${titleMinLength - valueLength}`);
     } else if (valueLength > titleMaxLength) {
-      inputTitle.setCustomValidity(`Максимум 100 символов, удалите лишние ${valueLength - titleMaxLength}`);
+      inputTitle.setCustomValidity(`Максимум ${titleMaxLength} символов, удалите лишние ${valueLength - titleMaxLength}`);
     } else {
       inputTitle.setCustomValidity(``);
     }
     inputTitle.reportValidity();
   };
-
-  const getValidityErrorMap = () => ({
-    badInput: `Только числовое значение`,
-    rangeOverflow: `Максимальная цена - ${inputPrice.max}`,
-    rangeUnderflow: `Минимальная цена - ${inputPrice.min}`,
-    valueMissing: `Заполните это поле`,
-  });
 
   const onPriceValidation = () => {
     const validityErrorMap = getValidityErrorMap();
@@ -98,14 +98,6 @@
     guestsNumberSelect.reportValidity();
   };
 
-  const onInputSetAvatar = () => {
-    window.image.setImagePreview(inputAvatar, previewAvatar);
-  };
-
-  const onInputSetImages = () => {
-    window.image.setImagePreview(inputImages, previewImages);
-  };
-
   const enableForm = () => {
     adForm.classList.remove(`ad-form--disabled`);
 
@@ -117,8 +109,8 @@
       adForm.classList.add(`ad-form--disabled`);
     }
 
-    window.image.removeImagePreview(previewAvatar);
-    window.image.removeImagePreview(previewImages);
+    window.upload.removeImagePreview(previewAvatar);
+    window.upload.removeImagePreview(previewImages);
     window.util.toggleFormElements(adForm, true);
     setAddress();
   };
@@ -142,8 +134,8 @@
   checkOutSelect.addEventListener(`change`, onCheckInOutChange);
   roomNumberSelect.addEventListener(`change`, onRoomsCapacityValidation);
   guestsNumberSelect.addEventListener(`change`, onRoomsCapacityValidation);
-  inputAvatar.addEventListener(`change`, onInputSetAvatar);
-  inputImages.addEventListener(`change`, onInputSetImages);
+  inputAvatar.addEventListener(`change`, () => window.upload.setImagePreview(inputAvatar, previewAvatar));
+  inputImages.addEventListener(`change`, () => window.upload.setImagePreview(inputImages, previewImages));
 
   window.form = {
     MAIN_PIN_OFFSET_X,

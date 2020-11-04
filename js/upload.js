@@ -36,7 +36,7 @@
     }
   };
 
-  window.image = {
+  window.upload = {
     setImagePreview,
     removeImagePreview,
   };

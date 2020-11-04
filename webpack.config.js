@@ -10,7 +10,7 @@ module.exports = {
     "./js/move.js",
     "./js/message.js",
     "./js/filter.js",
-    "./js/image.js",
+    "./js/upload.js",
     "./js/main.js",
   ],
   output: {
