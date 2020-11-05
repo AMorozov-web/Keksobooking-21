@@ -18,11 +18,11 @@ module.exports = {
     path: path.resolve(__dirname),
     iife: true,
   },
+  watch: true,
   devtool: false,
   devServer: {
     port: 3000,
-    historyApiFallback: {
-      index: 'index.html'
-    }
+    historyApiFallback: true,
+    hot: true,
   },
 };
