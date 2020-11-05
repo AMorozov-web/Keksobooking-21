@@ -76,6 +76,19 @@ const onFiltersChange = () => {
   window.pin.updatePins(selectedData);
 };
 
+const enableFilters = () => {
+  window.util.toggleFormElements(filtersContainer);
+};
+
+const disableFilters = () => {
+  filtersContainer.reset();
+  window.util.toggleFormElements(filtersContainer, true);
+};
+
 filtersContainer.addEventListener(`change`, onFiltersChange);
 
-window.filter = getFilteredData;
+window.filter = {
+  getFilteredData,
+  enableFilters,
+  disableFilters,
+};

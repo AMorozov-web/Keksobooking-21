@@ -101,7 +101,7 @@ const createCard = (pin) => {
   } = offer;
 
   const popupCard = popupCardTemplate.cloneNode(true);
-  const popupCardChilds = popupCard.children;
+  const popupCardChildren = popupCard.children;
   const popupCloseButton = popupCard.querySelector(`.popup__close`);
   const featureList = popupCard.querySelector(`.popup__features`);
   const photosContainer = popupCard.querySelector(`.popup__photos`);
@@ -123,7 +123,7 @@ const createCard = (pin) => {
 
   createPhotos(photos, photosContainer);
 
-  for (let child of popupCardChilds) {
+  for (const child of popupCardChildren) {
     checkCardElements(child);
   }
 

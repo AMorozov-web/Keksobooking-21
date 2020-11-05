@@ -1,6 +1,10 @@
 'use strict';
 
 const DEBOUNCE_INTERVAL = 500;
+const KeyCodes = {
+  ENTER: `Enter`,
+  ESC: `Escape`,
+};
 
 const debounceFunction = (callback, ms = DEBOUNCE_INTERVAL) => {
   let lastTimeout = null;
@@ -17,7 +21,7 @@ const debounceFunction = (callback, ms = DEBOUNCE_INTERVAL) => {
 };
 
 const toggleFormElements = (parentElem, state = false) => {
-  for (let elem of parentElem.children) {
+  for (const elem of parentElem.children) {
     elem.disabled = state;
   }
 };
@@ -37,17 +41,18 @@ const declTextByNumber = (number, textWordsArr) => {
   if (b === 1) {
     return textWordsArr[0];
   }
+
   return textWordsArr[2];
 };
 
 const checkPressEnter = (evt, action) => {
-  if (evt.key === `Enter`) {
+  if (evt.key === KeyCodes.ENTER) {
     action();
   }
 };
 
 const checkPressEsc = (evt, action) => {
-  if (evt.key === `Escape`) {
+  if (evt.key === KeyCodes.ESC) {
     action();
   }
 };

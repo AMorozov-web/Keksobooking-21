@@ -28,9 +28,9 @@ const setMainPinDefault = () => {
 
 const onLoadSuccess = (data) => {
   window.data = window.util.setIdToElements(data);
-  const randomPins = window.filter(window.data);
+  const randomPins = window.filter.getFilteredData(window.data);
 
-  window.form.enableFilters();
+  window.filter.enableFilters();
   window.pin.placePins(randomPins);
 };
 
@@ -66,7 +66,7 @@ const deactivatePage = () => {
 
   setMainPinDefault();
   window.form.disableForm();
-  window.form.disableFilters();
+  window.filter.disableFilters();
   window.card.closeCard();
   window.pin.removePins();
 

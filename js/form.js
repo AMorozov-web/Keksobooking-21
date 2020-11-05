@@ -4,7 +4,6 @@ const MAIN_PIN_OFFSET_X = 65;
 const MAIN_PIN_OFFSET_Y = 65;
 const MAIN_PIN_ACTIVE_OFFSET_Y = 84;
 
-const mapFiltersForm = document.querySelector(`.map__filters`);
 const mainPin = document.querySelector(`.map__pin--main`);
 const adForm = document.querySelector(`.ad-form`);
 const inputTitle = adForm.querySelector(`#title`);
@@ -97,6 +96,14 @@ const onRoomsCapacityValidation = () => {
   guestsNumberSelect.reportValidity();
 };
 
+const resetCheckboxes = () => {
+  const checkboxes = document.querySelectorAll(`input[type="checkbox"]:checked`);
+
+  checkboxes.forEach((elem) => {
+    elem.checked = false;
+  });
+};
+
 const enableForm = () => {
   adForm.classList.remove(`ad-form--disabled`);
 
@@ -108,18 +115,12 @@ const disableForm = () => {
     adForm.classList.add(`ad-form--disabled`);
   }
 
+  resetCheckboxes();
+  adForm.reset();
   window.upload.removeImagePreview(previewAvatar);
   window.upload.removeImagePreview(previewImages);
   window.util.toggleFormElements(adForm, true);
   setAddress();
-};
-
-const enableFilters = () => {
-  window.util.toggleFormElements(mapFiltersForm);
-};
-
-const disableFilters = () => {
-  window.util.toggleFormElements(mapFiltersForm, true);
 };
 
 setMinPrice(typeToMinPrice[typeSelect.value]);
@@ -142,7 +143,5 @@ window.form = {
   isPageActive,
   enableForm,
   disableForm,
-  enableFilters,
-  disableFilters,
   setAddress,
 };
