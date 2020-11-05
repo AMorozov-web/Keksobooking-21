@@ -18,10 +18,10 @@ const mapPinsContainer = document.querySelector(`.map__pins`);
 const mapFiltersContainer = document.querySelector(`.map__filters-container`);
 
 const typesMap = {
-  'palace': `Дворец`,
-  'flat': `Квартира`,
-  'house': `Дом`,
-  'bungalow': `Бунгало`
+  palace: `Дворец`,
+  flat: `Квартира`,
+  house: `Дом`,
+  bungalow: `Бунгало`
 };
 
 const createFeatures = (featuresArr, parentElement) => {
