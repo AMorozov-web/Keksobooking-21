@@ -1,6 +1,5 @@
 'use strict';
 
-const MAX_PINS_COUNT = 5;
 const MAIN_PIN_DEFAULT_COORDS = {
   top: 375,
   left: 570,
@@ -29,7 +28,7 @@ const setMainPinDefault = () => {
 
 const onLoadSuccess = (data) => {
   window.data = window.util.setIdToElements(data);
-  const randomPins = window.data.slice(0, MAX_PINS_COUNT);
+  const randomPins = window.filter(window.data);
 
   window.form.enableFilters();
   window.pin.placePins(randomPins);

@@ -1,55 +1,53 @@
 'use strict';
 
-(() => {
-  const onErrorEscPress = (evt) => {
-    const error = document.querySelector(`.error`);
-    const errorRemove = () => error.remove();
+const onErrorEscPress = (evt) => {
+  const error = document.querySelector(`.error`);
+  const errorRemove = () => error.remove();
 
-    window.util.checkPressEsc(evt, errorRemove);
-    document.removeEventListener(`keydown`, onErrorEscPress);
-  };
+  window.util.checkPressEsc(evt, errorRemove);
+  document.removeEventListener(`keydown`, onErrorEscPress);
+};
 
-  const onSuccessEscPress = (evt) => {
-    const success = document.querySelector(`.success`);
-    const successRemove = () => success.remove();
+const onSuccessEscPress = (evt) => {
+  const success = document.querySelector(`.success`);
+  const successRemove = () => success.remove();
 
-    window.util.checkPressEsc(evt, successRemove);
-    document.removeEventListener(`keydown`, onSuccessEscPress);
-  };
+  window.util.checkPressEsc(evt, successRemove);
+  document.removeEventListener(`keydown`, onSuccessEscPress);
+};
 
-  const renderSuccessMessage = () => {
-    const success = document.querySelector(`#success`).content.querySelector(`.success`).cloneNode(true);
-    const main = document.querySelector(`main`);
+const renderSuccessMessage = () => {
+  const success = document.querySelector(`#success`).content.querySelector(`.success`).cloneNode(true);
+  const main = document.querySelector(`main`);
 
-    main.insertAdjacentElement(`afterbegin`, success);
+  main.insertAdjacentElement(`afterbegin`, success);
 
-    success.addEventListener(`click`, () => {
-      success.remove();
-    });
+  success.addEventListener(`click`, () => {
+    success.remove();
+  });
 
-    document.addEventListener(`keydown`, onSuccessEscPress);
-  };
+  document.addEventListener(`keydown`, onSuccessEscPress);
+};
 
-  const renderErrorMessage = (errorText) => {
-    const error = document.querySelector(`#error`).content.querySelector(`.error`).cloneNode(true);
-    const main = document.querySelector(`main`);
-    const errorMessage = error.querySelector(`.error__message`);
+const renderErrorMessage = (errorText) => {
+  const error = document.querySelector(`#error`).content.querySelector(`.error`).cloneNode(true);
+  const main = document.querySelector(`main`);
+  const errorMessage = error.querySelector(`.error__message`);
 
-    if (errorText) {
-      errorMessage.textContent = errorText;
-    }
+  if (errorText) {
+    errorMessage.textContent = errorText;
+  }
 
-    main.insertAdjacentElement(`afterbegin`, error);
+  main.insertAdjacentElement(`afterbegin`, error);
 
-    error.addEventListener(`click`, () => {
-      error.remove();
-    });
+  error.addEventListener(`click`, () => {
+    error.remove();
+  });
 
-    document.addEventListener(`keydown`, onErrorEscPress);
-  };
+  document.addEventListener(`keydown`, onErrorEscPress);
+};
 
-  window.message = {
-    renderErrorMessage,
-    renderSuccessMessage,
-  };
-})();
+window.message = {
+  renderErrorMessage,
+  renderSuccessMessage,
+};
