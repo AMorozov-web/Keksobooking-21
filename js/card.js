@@ -3,13 +3,13 @@
 const ROOMS_DECLENSION = [
   `комната`,
   `комнаты`,
-  `комнат`
+  `комнат`,
 ];
 
 const GUESTS_DECLENSION = [
   `гостя`,
   `гостей`,
-  `гостей`
+  `гостей`,
 ];
 
 const popupCardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
@@ -21,7 +21,7 @@ const typesMap = {
   palace: `Дворец`,
   flat: `Квартира`,
   house: `Дом`,
-  bungalow: `Бунгало`
+  bungalow: `Бунгало`,
 };
 
 const createFeatures = (featuresArr, parentElement) => {
