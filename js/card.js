@@ -30,11 +30,11 @@ const createFeatures = (featuresArr, parentElement) => {
     return;
   }
 
-  for (let i = 0; i < featuresArr.length; i++) {
+  featuresArr.forEach((elem) => {
     const feature = document.createElement(`li`);
-    feature.classList.add(`popup__feature`, `popup__feature--${featuresArr[i]}`);
+    feature.classList.add(`popup__feature`, `popup__feature--${elem}`);
     parentElement.appendChild(feature);
-  }
+  });
 };
 
 const createPhotos = (photosArr, parentElement) => {
