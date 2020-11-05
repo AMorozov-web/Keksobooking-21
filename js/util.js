@@ -22,14 +22,6 @@ const toggleFormElements = (parentElem, state = false) => {
   }
 };
 
-const getRandomElement = (arr) => {
-  return arr[Math.floor(Math.random() * arr.length)];
-};
-
-const getRandomInRange = (min, max) => {
-  return Math.floor(min + Math.random() * (max + 1 - min));
-};
-
 const declTextByNumber = (number, textWordsArr) => {
   const a = Math.abs(number) % 100;
   const b = number % 10;
@@ -66,8 +58,6 @@ const setIdToElements = (arr) => {
 
 window.util = {
   toggleFormElements,
-  getRandomElement,
-  getRandomInRange,
   declTextByNumber,
   checkPressEnter,
   checkPressEsc,
