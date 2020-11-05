@@ -1,8 +1,8 @@
 'use strict';
 
-const MAIN_PIN_DEFAULT_COORDS = {
-  top: 375,
-  left: 570,
+const MainPinDefaultCoords = {
+  TOP: 375,
+  LEFT: 570,
 };
 
 const map = document.querySelector(`.map`);
@@ -22,8 +22,8 @@ const onMainPinMouseDown = (evt) => {
 };
 
 const setMainPinDefault = () => {
-  mainPin.style.top = `${MAIN_PIN_DEFAULT_COORDS.top}px`;
-  mainPin.style.left = `${MAIN_PIN_DEFAULT_COORDS.left}px`;
+  mainPin.style.top = `${MainPinDefaultCoords.TOP}px`;
+  mainPin.style.left = `${MainPinDefaultCoords.LEFT}px`;
 };
 
 const onLoadSuccess = (data) => {
