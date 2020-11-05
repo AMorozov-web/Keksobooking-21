@@ -3,13 +3,13 @@
 const ROOMS_DECLENSION = [
   `комната`,
   `комнаты`,
-  `комнат`
+  `комнат`,
 ];
 
 const GUESTS_DECLENSION = [
   `гостя`,
   `гостей`,
-  `гостей`
+  `гостей`,
 ];
 
 const popupCardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
@@ -18,10 +18,10 @@ const mapPinsContainer = document.querySelector(`.map__pins`);
 const mapFiltersContainer = document.querySelector(`.map__filters-container`);
 
 const typesMap = {
-  'palace': `Дворец`,
-  'flat': `Квартира`,
-  'house': `Дом`,
-  'bungalow': `Бунгало`
+  palace: `Дворец`,
+  flat: `Квартира`,
+  house: `Дом`,
+  bungalow: `Бунгало`,
 };
 
 const createFeatures = (featuresArr, parentElement) => {
@@ -30,11 +30,11 @@ const createFeatures = (featuresArr, parentElement) => {
     return;
   }
 
-  for (let i = 0; i < featuresArr.length; i++) {
+  featuresArr.forEach((elem) => {
     const feature = document.createElement(`li`);
-    feature.classList.add(`popup__feature`, `popup__feature--${featuresArr[i]}`);
+    feature.classList.add(`popup__feature`, `popup__feature--${elem}`);
     parentElement.appendChild(feature);
-  }
+  });
 };
 
 const createPhotos = (photosArr, parentElement) => {
@@ -101,7 +101,7 @@ const createCard = (pin) => {
   } = offer;
 
   const popupCard = popupCardTemplate.cloneNode(true);
-  const popupCardChilds = popupCard.children;
+  const popupCardChildren = popupCard.children;
   const popupCloseButton = popupCard.querySelector(`.popup__close`);
   const featureList = popupCard.querySelector(`.popup__features`);
   const photosContainer = popupCard.querySelector(`.popup__photos`);
@@ -123,7 +123,7 @@ const createCard = (pin) => {
 
   createPhotos(photos, photosContainer);
 
-  for (let child of popupCardChilds) {
+  for (const child of popupCardChildren) {
     checkCardElements(child);
   }
 

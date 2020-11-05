@@ -1,8 +1,8 @@
 'use strict';
 
-const MAIN_PIN_DEFAULT_COORDS = {
-  top: 375,
-  left: 570,
+const MainPinDefaultCoords = {
+  TOP: 375,
+  LEFT: 570,
 };
 
 const map = document.querySelector(`.map`);
@@ -22,15 +22,15 @@ const onMainPinMouseDown = (evt) => {
 };
 
 const setMainPinDefault = () => {
-  mainPin.style.top = `${MAIN_PIN_DEFAULT_COORDS.top}px`;
-  mainPin.style.left = `${MAIN_PIN_DEFAULT_COORDS.left}px`;
+  mainPin.style.top = `${MainPinDefaultCoords.TOP}px`;
+  mainPin.style.left = `${MainPinDefaultCoords.LEFT}px`;
 };
 
 const onLoadSuccess = (data) => {
   window.data = window.util.setIdToElements(data);
-  const randomPins = window.filter(window.data);
+  const randomPins = window.filter.getFilteredData(window.data);
 
-  window.form.enableFilters();
+  window.filter.enableFilters();
   window.pin.placePins(randomPins);
 };
 
@@ -66,7 +66,7 @@ const deactivatePage = () => {
 
   setMainPinDefault();
   window.form.disableForm();
-  window.form.disableFilters();
+  window.filter.disableFilters();
   window.card.closeCard();
   window.pin.removePins();
 

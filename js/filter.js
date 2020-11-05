@@ -57,13 +57,13 @@ const getFilteredData = (data) => {
   const filteredData = [];
 
   for (let i = 0; i < data.length; i++) {
-    if (filteredData.length >= MAX_PINS_COUNT) {
-      return filteredData;
-    }
-
     if (filterByType(data[i]) && filterByPrice(data[i]) && filterByRoomsCount(data[i])
       && filterByGuestsCount(data[i]) && filterByFeatures(data[i])) {
       filteredData.push(data[i]);
+    }
+
+    if (filteredData.length === MAX_PINS_COUNT) {
+      return filteredData;
     }
   }
 
@@ -76,6 +76,19 @@ const onFiltersChange = () => {
   window.pin.updatePins(selectedData);
 };
 
+const enableFilters = () => {
+  window.util.toggleFormElements(filtersContainer);
+};
+
+const disableFilters = () => {
+  filtersContainer.reset();
+  window.util.toggleFormElements(filtersContainer, true);
+};
+
 filtersContainer.addEventListener(`change`, onFiltersChange);
 
-window.filter = getFilteredData;
+window.filter = {
+  getFilteredData,
+  enableFilters,
+  disableFilters,
+};

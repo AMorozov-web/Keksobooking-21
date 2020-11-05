@@ -1,6 +1,10 @@
 'use strict';
 
 const DEBOUNCE_INTERVAL = 500;
+const KeyCodes = {
+  ENTER: `Enter`,
+  ESC: `Escape`,
+};
 
 const debounceFunction = (callback, ms = DEBOUNCE_INTERVAL) => {
   let lastTimeout = null;
@@ -17,43 +21,9 @@ const debounceFunction = (callback, ms = DEBOUNCE_INTERVAL) => {
 };
 
 const toggleFormElements = (parentElem, state = false) => {
-  for (let elem of parentElem.children) {
+  for (const elem of parentElem.children) {
     elem.disabled = state;
   }
-};
-
-const shuffleArray = (arr) => {
-  const newArr = arr.slice();
-
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
-  }
-
-  return newArr;
-};
-
-const getRandomElement = (arr) => {
-  return arr[Math.floor(Math.random() * arr.length)];
-};
-
-const getRandomInRange = (min, max) => {
-  return Math.floor(min + Math.random() * (max + 1 - min));
-};
-
-const getRandomArr = (arr) => {
-  const selectedElements = [];
-
-  if (arr.length !== 0) {
-    const randomElementsCount = getRandomInRange(1, arr.length);
-    const allElements = shuffleArray(arr);
-
-    for (let i = 0; i < randomElementsCount; i++) {
-      selectedElements.push(allElements[i]);
-    }
-  }
-
-  return selectedElements;
 };
 
 const declTextByNumber = (number, textWordsArr) => {
@@ -71,17 +41,18 @@ const declTextByNumber = (number, textWordsArr) => {
   if (b === 1) {
     return textWordsArr[0];
   }
+
   return textWordsArr[2];
 };
 
 const checkPressEnter = (evt, action) => {
-  if (evt.key === `Enter`) {
+  if (evt.key === KeyCodes.ENTER) {
     action();
   }
 };
 
 const checkPressEsc = (evt, action) => {
-  if (evt.key === `Escape`) {
+  if (evt.key === KeyCodes.ESC) {
     action();
   }
 };
@@ -92,10 +63,6 @@ const setIdToElements = (arr) => {
 
 window.util = {
   toggleFormElements,
-  shuffleArray,
-  getRandomElement,
-  getRandomInRange,
-  getRandomArr,
   declTextByNumber,
   checkPressEnter,
   checkPressEsc,
