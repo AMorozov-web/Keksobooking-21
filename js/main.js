@@ -5,6 +5,8 @@ const MainPinDefaultCoords = {
   LEFT: 570,
 };
 
+const MOUSE_LEFT_BUTTON_KEYCODE = 0;
+
 const map = document.querySelector(`.map`);
 const mainPin = document.querySelector(`.map__pin--main`);
 const mapPinsContainer = document.querySelector(`.map__pins`);
@@ -16,7 +18,7 @@ const onMainPinPressEnter = (evt) => {
 };
 
 const onMainPinMouseDown = (evt) => {
-  if (evt.button === 0) {
+  if (evt.button === MOUSE_LEFT_BUTTON_KEYCODE) {
     activatePage();
   }
 };
@@ -26,22 +28,22 @@ const setMainPinDefault = () => {
   mainPin.style.left = `${MainPinDefaultCoords.LEFT}px`;
 };
 
-const onLoadSuccess = (data) => {
+const onLoadDataSuccess = (data) => {
   window.data = window.util.setIdToElements(data);
   const randomPins = window.filter.getFilteredData(window.data);
 
-  window.filter.enableFilters();
-  window.pin.placePins(randomPins);
+  window.filter.enable();
+  window.pin.render(randomPins);
 };
 
-const onSubmitSuccess = () => {
-  window.message.renderSuccessMessage();
+const onFormSubmitSuccess = () => {
+  window.message.success();
   adForm.reset();
   deactivatePage();
 };
 
 const onError = (errorText) => {
-  window.message.renderErrorMessage(errorText);
+  window.message.error(errorText);
 };
 
 const activatePage = () => {
@@ -49,12 +51,12 @@ const activatePage = () => {
 
   window.form.isPageActive = true;
 
-  window.form.enableForm();
-  window.backend.load(onLoadSuccess, onError);
+  window.form.enable();
+  window.backend.load(onLoadDataSuccess, onError);
 
   mainPin.removeEventListener(`mousedown`, onMainPinMouseDown);
   mainPin.removeEventListener(`keydown`, onMainPinPressEnter);
-  mapPinsContainer.addEventListener(`click`, window.pin.onMapPinsClick);
+  mapPinsContainer.addEventListener(`click`, window.pin.click);
 };
 
 const deactivatePage = () => {
@@ -65,14 +67,14 @@ const deactivatePage = () => {
   window.form.isPageActive = false;
 
   setMainPinDefault();
-  window.form.disableForm();
-  window.filter.disableFilters();
-  window.card.closeCard();
-  window.pin.removePins();
+  window.form.disable();
+  window.filter.disable();
+  window.card.close();
+  window.pin.remove();
 
   mainPin.addEventListener(`mousedown`, onMainPinMouseDown);
   mainPin.addEventListener(`keydown`, onMainPinPressEnter);
-  mapPinsContainer.removeEventListener(`click`, window.pin.onMapPinsClick);
+  mapPinsContainer.removeEventListener(`click`, window.pin.click);
 };
 
 adFormResetButton.addEventListener(`mousedown`, () => {
@@ -82,7 +84,7 @@ adFormResetButton.addEventListener(`mousedown`, () => {
 adForm.addEventListener(`submit`, (evt) => {
   const data = new FormData(adForm);
 
-  window.backend.upload(data, onSubmitSuccess, onError);
+  window.backend.upload(data, onFormSubmitSuccess, onError);
   evt.preventDefault();
 });
 

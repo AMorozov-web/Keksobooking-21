@@ -73,7 +73,7 @@ const getFilteredData = (data) => {
 const onFiltersChange = () => {
   const selectedData = getFilteredData(window.data);
 
-  window.pin.updatePins(selectedData);
+  window.pin.update(selectedData);
 };
 
 const enableFilters = () => {
@@ -89,6 +89,6 @@ filtersContainer.addEventListener(`change`, onFiltersChange);
 
 window.filter = {
   getFilteredData,
-  enableFilters,
-  disableFilters,
+  enable: enableFilters,
+  disable: disableFilters,
 };

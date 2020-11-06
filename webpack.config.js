@@ -18,7 +18,6 @@ module.exports = {
     path: path.resolve(__dirname),
     iife: true,
   },
-  watch: true,
   devtool: false,
   devServer: {
     port: 3000,

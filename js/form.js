@@ -141,7 +141,7 @@ window.form = {
   MAIN_PIN_OFFSET_X,
   MAIN_PIN_ACTIVE_OFFSET_Y,
   isPageActive,
-  enableForm,
-  disableForm,
+  enable: enableForm,
+  disable: disableForm,
   setAddress,
 };

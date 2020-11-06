@@ -134,10 +134,10 @@ const createCard = (pin) => {
   return popupCard;
 };
 
-const onCardPressEsc = (evt) => {
+const onDocumentEscPress = (evt) => {
   window.util.checkPressEsc(evt, closeCard);
 
-  document.removeEventListener(`keydown`, onCardPressEsc);
+  document.removeEventListener(`keydown`, onDocumentEscPress);
 };
 
 const placeCard = (elem) => {
@@ -145,10 +145,10 @@ const placeCard = (elem) => {
 
   const card = createCard(elem);
   map.insertBefore(card, mapFiltersContainer);
-  document.addEventListener(`keydown`, onCardPressEsc);
+  document.addEventListener(`keydown`, onDocumentEscPress);
 };
 
 window.card = {
-  placeCard,
-  closeCard,
+  render: placeCard,
+  close: closeCard,
 };

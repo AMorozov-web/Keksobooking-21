@@ -17,14 +17,14 @@ const pinMoveLimits = {
   right: MapMoveLimits.RIGHT + Math.ceil(window.form.MAIN_PIN_OFFSET_X / 2) - mainPin.offsetWidth,
 };
 
-const onMainPinMove = (evt) => {
+const onMainPinMouseMove = (evt) => {
 
   let startCoords = {
     x: evt.clientX,
     y: evt.clientY,
   };
 
-  const onMouseMove = (moveEvt) => {
+  const onDocumentMouseMove = (moveEvt) => {
     moveEvt.preventDefault();
 
     const shift = {
@@ -58,16 +58,16 @@ const onMainPinMove = (evt) => {
     mainPin.style.top = `${newCoords.y}px`;
   };
 
-  const onMouseUp = (upEvt) => {
+  const onDocumentMouseUp = (upEvt) => {
     upEvt.preventDefault();
 
     window.form.setAddress();
-    document.removeEventListener(`mousemove`, onMouseMove);
-    document.removeEventListener(`mouseup`, onMouseUp);
+    document.removeEventListener(`mousemove`, onDocumentMouseMove);
+    document.removeEventListener(`mouseup`, onDocumentMouseUp);
   };
 
-  document.addEventListener(`mousemove`, onMouseMove);
-  document.addEventListener(`mouseup`, onMouseUp);
+  document.addEventListener(`mousemove`, onDocumentMouseMove);
+  document.addEventListener(`mouseup`, onDocumentMouseUp);
 };
 
-mainPin.addEventListener(`mousedown`, onMainPinMove);
+mainPin.addEventListener(`mousedown`, onMainPinMouseMove);

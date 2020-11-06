@@ -36,7 +36,7 @@ const onMapPinsClick = (evt) => {
     const buttonId = parseInt(pinButton.dataset.id, 10);
     const currentCardData = window.data.find((item) => (item.id === buttonId));
 
-    window.card.placeCard(currentCardData);
+    window.card.render(currentCardData);
 
     pinButton.classList.add(`map__pin--active`);
   }
@@ -51,14 +51,14 @@ const removePins = () => {
 };
 
 const updatePins = window.util.debounceFunction((data) => {
-  window.card.closeCard();
+  window.card.close();
   removePins();
   placePins(data);
 });
 
 window.pin = {
-  placePins,
-  onMapPinsClick,
-  removePins,
-  updatePins,
+  render: placePins,
+  click: onMapPinsClick,
+  remove: removePins,
+  update: updatePins,
 };

@@ -48,6 +48,6 @@ const renderErrorMessage = (errorText) => {
 };
 
 window.message = {
-  renderErrorMessage,
-  renderSuccessMessage,
+  error: renderErrorMessage,
+  success: renderSuccessMessage,
 };
