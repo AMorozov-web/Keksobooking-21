@@ -1,51 +1,29 @@
 'use strict';
 
 const main = document.querySelector(`main`);
-const successMessage = document.querySelector(`#success`).content.querySelector(`.success`).cloneNode(true);
-const errorMessage = document.querySelector(`#error`).content.querySelector(`.error`).cloneNode(true);
 
-const MessageTypes = {
-  ERROR: `error`,
-  SUCCESS: `success`,
-};
-
-const removeMessage = (messageType) => {
-  main.querySelector(`.${messageType}`).remove();
-};
-
-const onErrorEscPress = (evt) => {
-  window.util.checkPressEsc(evt, removeMessage(MessageTypes.ERROR));
-  document.removeEventListener(`keydown`, onErrorEscPress);
-};
-
-const onSuccessEscPress = (evt) => {
-  window.util.checkPressEsc(evt, removeMessage(MessageTypes.SUCCESS));
-  document.removeEventListener(`keydown`, onSuccessEscPress);
-};
-
-const renderMessage = (message, messageText = false) => {
-  if (messageText && message.querySelector(`.error__message`)) {
-    message.querySelector(`.error__message`).textContent = messageText;
+const renderMessage = (messageTemplate, messageText = false) => {
+  if (messageText && messageTemplate.querySelector(`.error__message`)) {
+    messageTemplate.querySelector(`.error__message`).textContent = messageText;
   }
 
-  main.insertAdjacentElement(`afterbegin`, message);
+  const closeMessage = () => {
+    messageTemplate.remove();
+    document.removeEventListener(`keydown`, onDocumentKeydown);
+  };
 
-  message.addEventListener(`click`, () => {
-    message.remove();
+  const onDocumentKeydown = (evt) => {
+    window.util.checkPressEsc(evt, closeMessage);
+  };
+
+  main.insertAdjacentElement(`afterbegin`, messageTemplate);
+  document.addEventListener(`keydown`, onDocumentKeydown);
+
+  messageTemplate.addEventListener(`click`, () => {
+    closeMessage();
   });
 };
 
-const renderSuccessMessage = () => {
-  renderMessage(successMessage);
-  document.addEventListener(`keydown`, onSuccessEscPress);
-};
-
-const renderErrorMessage = (errorText) => {
-  renderMessage(errorMessage, errorText);
-  document.addEventListener(`keydown`, onErrorEscPress);
-};
-
 window.message = {
-  error: renderErrorMessage,
-  success: renderSuccessMessage,
+  show: renderMessage,
 };

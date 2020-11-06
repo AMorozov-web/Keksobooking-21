@@ -12,6 +12,8 @@ const mainPin = document.querySelector(`.map__pin--main`);
 const mapPinsContainer = document.querySelector(`.map__pins`);
 const adForm = document.querySelector(`.ad-form`);
 const adFormResetButton = adForm.querySelector(`.ad-form__reset`);
+const successMessageTemplate = document.querySelector(`#success`).content.querySelector(`.success`).cloneNode(true);
+const errorMessageTemplate = document.querySelector(`#error`).content.querySelector(`.error`).cloneNode(true);
 
 const onMainPinPressEnter = (evt) => {
   window.util.checkPressEnter(evt, activatePage);
@@ -37,13 +39,13 @@ const onLoadDataSuccess = (data) => {
 };
 
 const onFormSubmitSuccess = () => {
-  window.message.success();
+  window.message.show(successMessageTemplate);
   adForm.reset();
   deactivatePage();
 };
 
 const onError = (errorText) => {
-  window.message.error(errorText);
+  window.message.show(errorMessageTemplate, errorText);
 };
 
 const activatePage = () => {
