@@ -1,49 +1,47 @@
 'use strict';
 
-const onErrorEscPress = (evt) => {
-  const error = document.querySelector(`.error`);
-  const errorRemove = () => error.remove();
+const main = document.querySelector(`main`);
+const successMessage = document.querySelector(`#success`).content.querySelector(`.success`).cloneNode(true);
+const errorMessage = document.querySelector(`#error`).content.querySelector(`.error`).cloneNode(true);
 
-  window.util.checkPressEsc(evt, errorRemove);
+const MessageTypes = {
+  ERROR: `error`,
+  SUCCESS: `success`,
+};
+
+const removeMessage = (messageType) => {
+  main.querySelector(`.${messageType}`).remove();
+};
+
+const onErrorEscPress = (evt) => {
+  window.util.checkPressEsc(evt, removeMessage(MessageTypes.ERROR));
   document.removeEventListener(`keydown`, onErrorEscPress);
 };
 
 const onSuccessEscPress = (evt) => {
-  const success = document.querySelector(`.success`);
-  const successRemove = () => success.remove();
-
-  window.util.checkPressEsc(evt, successRemove);
+  window.util.checkPressEsc(evt, removeMessage(MessageTypes.SUCCESS));
   document.removeEventListener(`keydown`, onSuccessEscPress);
 };
 
-const renderSuccessMessage = () => {
-  const success = document.querySelector(`#success`).content.querySelector(`.success`).cloneNode(true);
-  const main = document.querySelector(`main`);
+const renderMessage = (message, messageText = false) => {
+  if (messageText && message.querySelector(`.error__message`)) {
+    message.querySelector(`.error__message`).textContent = messageText;
+  }
 
-  main.insertAdjacentElement(`afterbegin`, success);
+  main.insertAdjacentElement(`afterbegin`, message);
 
-  success.addEventListener(`click`, () => {
-    success.remove();
+  message.addEventListener(`click`, () => {
+    message.remove();
   });
+};
 
+const renderSuccessMessage = () => {
+  renderMessage(successMessage);
   document.addEventListener(`keydown`, onSuccessEscPress);
 };
 
 const renderErrorMessage = (errorText) => {
-  const error = document.querySelector(`#error`).content.querySelector(`.error`).cloneNode(true);
-  const main = document.querySelector(`main`);
-  const errorMessage = error.querySelector(`.error__message`);
-
-  if (errorText) {
-    errorMessage.textContent = errorText;
-  }
-
-  main.insertAdjacentElement(`afterbegin`, error);
-
-  error.addEventListener(`click`, () => {
-    error.remove();
-  });
-
+  renderMessage(errorMessage, errorText);
   document.addEventListener(`keydown`, onErrorEscPress);
 };
 
