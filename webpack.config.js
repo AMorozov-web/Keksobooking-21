@@ -1,4 +1,5 @@
 const path = require("path");
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   entry: [
@@ -14,16 +15,36 @@ module.exports = {
     "./js/main.js",
   ],
   output: {
-    filename: "script.js",
-    path: path.resolve(__dirname),
+    filename: "js/script.js",
+    path: path.resolve(__dirname, 'public'),
     iife: true,
   },
   mode: 'production',
   devtool: false,
   devServer: {
+    contentBase: path.resolve(__dirname, 'public'),
     port: 3000,
     historyApiFallback: true,
+    watchContentBase: true,
     hot: true,
-    open: true,
+    open: false,
   },
+  plugins: [
+    new CopyPlugin({
+      patterns: [
+        {
+          from: 'img',
+          to: 'img',
+        },
+        {
+          from: 'css',
+          to: 'css',
+        },
+        {
+          from: 'fonts',
+          to: 'fonts',
+        },
+      ],
+    }),
+  ],
 };
